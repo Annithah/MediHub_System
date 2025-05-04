@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MediHub - Doctor Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            color: #333;
+        }
+        .header {
+            background: #2196F3;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            flex: 1 1 300px;
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #2196F3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #f2f2f2;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0b7dda;
+        }
+        .logout {
+            float: right;
+            margin-top: -40px;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Dr. <span id="doctor-name">Doctor Name</span></h1>
+        <a href="{% url 'logout' %}" class="logout">Logout</a>
+    </div>
+
+    <div class="container">
+        <!-- Patient Records -->
+        <div class="card">
+            <h3>Patient Health Logs</h3>
+            <table>
+                <tr>
+                    <th>Patient</th>
+                    <th>Blood Pressure</th>
+                    <th>Symptoms</th>
+                </tr>
+                <tr>
+                    <td>John Doe</td>
+                    <td>120/80</td>
+                    <td>Headache, Fatigue</td>
+                </tr>
+                <tr>
+                    <td>Jane Smith</td>
+                    <td>130/85</td>
+                    <td>Chest Pain</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Appointments -->
+        <div class="card">
+            <h3>Appointment Requests</h3>
+            <table>
+                <tr>
+                    <th>Patient</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td>John Doe</td>
+                    <td>May 10, 2025</td>
+                    <td><button>Approve</button> <button>Reject</button></td>
+                </tr>
+                <tr>
+                    <td>Jane Smith</td>
+                    <td>May 12, 2025</td>
+                    <td><button>Approve</button> <button>Reject</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Send Notes -->
+        <div class="card">
+            <h3>Send Notes to Patient</h3>
+            <form method="post" action="{% url 'send_notes' %}">
+                {% csrf_token %}
+                <label>Patient:</label>
+                <select name="patient">
+                    <option>John Doe</option>
+                    <option>Jane Smith</option>
+                </select><br><br>
+                <label>Message:</label>
+                <textarea name="message" rows="4"></textarea><br><br>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

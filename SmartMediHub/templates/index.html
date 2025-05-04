@@ -51,7 +51,6 @@
                          <span class="icon icon-bar"></span>
                          <span class="icon icon-bar"></span>
                     </button>
-                    <!-- <a href="{% url 'index' %}" class="navbar-brand"><i class="fa fa-h-square"></i>MediHub</a> -->
                     <a href="{% url 'index' %}" class="navbar-brand"><img src="{% static 'images/mediHubpic.png' %}" alt="MediHub Logo"></a>
                </div>
 
@@ -62,7 +61,8 @@
                          <li><a href="#team" class="smoothScroll">Doctors</a></li>
                          <li><a href="#news" class="smoothScroll">News</a></li>
                          <li><a href="#google-map" class="smoothScroll">Contact</a></li>
-                         <li class="appointment-btn"><a href="#appointment">Make an appointment</a></li>
+                         <li class="appointment-btn"><a href="#signup">Create Account</a></li>
+                         <li class="login-btn"><a href="{% url 'login' %}">Login</a></li>
                     </ul>
                </div>
           </div>
@@ -274,8 +274,8 @@
           </div>
      </section>
 
-     <!-- MAKE AN APPOINTMENT -->
-     <section id="appointment" data-stellar-background-ratio="3">
+     <!-- SIGNUP FORM -->
+     <section id="signup" data-stellar-background-ratio="3">
           <div class="container">
                <div class="row">
                     <div class="col-md-6 col-sm-6">
@@ -283,53 +283,44 @@
                     </div>
 
                     <div class="col-md-6 col-sm-6">
-                         <form id="appointment-form" role="form" method="post" action="#">
+                         <form id="signup-form" role="form" method="post" action="{% url 'patient_signup' %}">
                               {% csrf_token %}
                               <div class="section-title wow fadeInUp" data-wow-delay="0.4s">
-                                   <h2>Make an appointment</h2>
+                                   <h2>Create Your Account</h2>
                               </div>
 
                               <div class="wow fadeInUp" data-wow-delay="0.8s">
                                    <div class="col-md-6 col-sm-6">
-                                        <label for="name">Name</label>
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Full Name">
+                                        <label for="first_name">First Name</label>
+                                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" required>
                                    </div>
 
                                    <div class="col-md-6 col-sm-6">
-                                        <label for="email">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="Your Email">
-                                   </div>
-
-                                   <div class="col-md-6 col-sm-6">
-                                        <label for="date">Select Date</label>
-                                        <input type="date" name="date" value="" class="form-control">
-                                   </div>
-
-                                   <div class="col-md-6 col-sm-6">
-                                        <label for="select">Select Department</label>
-                                        <select class="form-control">
-                                             <option>General Health</option>
-                                             <option>Cardiology</option>
-                                             <option>Dental</option>
-                                             <option>Medical Research</option>
-                                             <option>Pregnancy</option>
-                                             <option>Neurology</option>
-                                             <option>Orthopedics</option>
-                                             <option>Ophthalmology</option>
-                                             <option>Urology</option>
-                                             <option>Psychiatry</option>
-                                             <option>Dermatology</option>
-                                             <option>Gastroenterology</option>
-                                             <option>Endocrinology</option>
-                                        </select>
+                                        <label for="last_name">Last Name</label>
+                                        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" required>
                                    </div>
 
                                    <div class="col-md-12 col-sm-12">
-                                        <label for="telephone">Phone Number</label>
-                                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone">
-                                        <label for="Message">Additional Message</label>
-                                        <textarea class="form-control" rows="5" id="message" name="message" placeholder="Message"></textarea>
-                                        <button type="submit" class="form-control" id="cf-submit" name="submit">Submit Button</button>
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
+                                   </div>
+
+                                   <div class="col-md-6 col-sm-6">
+                                        <label for="password">Password</label>
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                                   </div>
+
+                                   <div class="col-md-6 col-sm-6">
+                                        <label for="confirm_password">Confirm Password</label>
+                                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+                                   </div>
+
+                                   <div class="col-md-12 col-sm-12">
+                                        <label for="phone">Phone Number</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
+                                        
+                                        <button type="submit" class="form-control" id="signup-submit" name="submit">Create Account</button>
+                                        <p class="text-center mt-3">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
                                    </div>
                               </div>
                         </form>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MediHub - Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            color: #333;
+        }
+        .header {
+            background: #9C27B0;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            flex: 1 1 300px;
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #9C27B0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #f2f2f2;
+        }
+        button {
+            background: #9C27B0;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #7B1FA2;
+        }
+        .logout {
+            float: right;
+            margin-top: -40px;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Admin Dashboard</h1>
+        <a href="{% url 'logout' %}" class="logout">Logout</a>
+    </div>
+
+    <div class="container">
+        <!-- User Management -->
+        <div class="card">
+            <h3>Manage Users</h3>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td>John Doe</td>
+                    <td>Patient</td>
+                    <td><button>Edit</button> <button>Delete</button></td>
+                </tr>
+                <tr>
+                    <td>Dr. Smith</td>
+                    <td>Doctor</td>
+                    <td><button>Edit</button> <button>Delete</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- System Analytics -->
+        <div class="card">
+            <h3>System Analytics</h3>
+            <p><strong>Total Patients:</strong> 150</p>
+            <p><strong>Total Doctors:</strong> 20</p>
+            <p><strong>Active Appointments:</strong> 45</p>
+        </div>
+
+        <!-- Add New User -->
+        <div class="card">
+            <h3>Add New User</h3>
+            <form method="post" action="{% url 'add_user' %}">
+                {% csrf_token %}
+                <label>Name:</label>
+                <input type="text" name="name"><br><br>
+                <label>Email:</label>
+                <input type="email" name="email"><br><br>
+                <label>Role:</label>
+                <select name="role">
+                    <option>Patient</option>
+                    <option>Doctor</option>
+                    <option>Admin</option>
+                </select><br><br>
+                <button type="submit">Create User</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
