@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mediHub| Hospital</title>
+    <style>
+        body {
+            font-family: 'poppins', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .appointment-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .appointment-card h2 {
+            font-size: 28px;
+            text-align: center;
+            color: #3b3b3b;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            font-size: 14px;
+            color: #6c6c6c;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            box-sizing: border-box;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-submit:hover {
+            background-color: #45a049;
+        }
+        .section-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="appointment-card">
+            <h2>Request an Appointment</h2>
+            <form method="post" action="{% url 'appointment' %}">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="doctor">Choose a Doctor</label>
+                    <select name="doctor" id="doctor" required>
+                        <option value="Dr. John Doe">Dr. John Doe</option>
+                        <option value="Dr. Jane Smith">Dr. Jane Smith</option>
+                        <option value="Dr. Alice Brown">Dr. Alice Brown</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="appointment_date">Preferred Appointment Date</label>
+                    <input type="date" name="appointment_date" id="appointment_date" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="reason">Reason for Appointment</label>
+                    <textarea name="reason" id="reason" rows="4" placeholder="Describe the reason for your appointment..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Submit Appointment Request</button>
+            </form>
+            <div class="section-footer">
+                <p>Thank you for using our hospital services.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth import login
+from django.contrib.auth import login as auth_login, authenticate
+from django.contrib.auth.forms import AuthenticationForm
 from .models import *
 from .forms import *
 
 # Index View
 def index(request):
-    return render(request, 'index.html')  # Ensure you have an 'index.html' file in your templates folder
+    return render(request, 'index.html')
 
 # Doctor Signup View
 def doctor_signup(request):
@@ -15,11 +16,11 @@ def doctor_signup(request):
         if form.is_valid():
             user = form.save()
             Doctor.objects.create(user=user)
-            login(request, user)
+            auth_login(request, user)
             return redirect('doctor_dashboard')
     else:
         form = DoctorSignUpForm()
-    return render(request, 'registration/doctor_signup.html', {'form': form})
+    return render(request, 'doctor_signup.html', {'form': form})
 
 # Patient Signup View
 def patient_signup(request):
@@ -28,21 +29,44 @@ def patient_signup(request):
         if form.is_valid():
             user = form.save()
             Patient.objects.create(user=user)
-            login(request, user)
+            auth_login(request, user)
             return redirect('patient_dashboard')
     else:
         form = PatientSignUpForm()
-    return render(request, 'registration/patient_signup.html', {'form': form})
+    return render(request, 'login.html', {'form': form})
+
+# Custom Login View
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            auth_login(request, user)
+
+            # Redirect to correct dashboard
+            if hasattr(user, 'patient'):
+                return redirect('patient_dashboard')
+            elif hasattr(user, 'doctor'):
+                return redirect('doctor_dashboard')
+            elif user.is_superuser:
+                return redirect('admin_dashboard')
+            else:
+                return redirect('index')  # fallback
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
 
 # Patient Dashboard
 @login_required
 def patient_dashboard(request):
-    if not request.user.is_patient:
+    if not hasattr(request.user, 'patient'):
         return redirect('login')
+    
     appointments = Appointment.objects.filter(patient=request.user.patient)
     prescriptions = Prescription.objects.filter(patient=request.user.patient)
     bills = Billing.objects.filter(patient=request.user.patient)
-    return render(request, 'patient_dashboard.html', {
+    
+    return render(request, 'appointment.html', {
         'appointments': appointments,
         'prescriptions': prescriptions,
         'bills': bills
@@ -50,7 +74,7 @@ def patient_dashboard(request):
 
 # Doctor Dashboard
 @login_required
-@user_passes_test(lambda u: u.is_doctor)
+@user_passes_test(lambda u: hasattr(u, 'doctor'))
 def doctor_dashboard(request):
     appointments = Appointment.objects.filter(doctor=request.user.doctor)
     patients = Patient.objects.filter(
@@ -64,12 +88,12 @@ def doctor_dashboard(request):
 
 # Admin Dashboard
 @login_required
-@user_passes_test(lambda u: u.is_admin)
+@user_passes_test(lambda u: u.is_superuser)
 def admin_dashboard(request):
     patients = Patient.objects.all()
     doctors = Doctor.objects.all()
     appointments = Appointment.objects.all()
-    return render(request, 'admin.html', {
+    return render(request, 'admin_dashboard.html', {
         'patients': patients,
         'doctors': doctors,
         'appointments': appointments
@@ -87,22 +111,27 @@ def book_appointment(request):
             return redirect('patient_dashboard')
     else:
         form = AppointmentForm()
-    return render(request, 'book_appointment.html', {'form': form})
+    return render(request, 'appointment.html', {'form': form})
 
 @login_required
-@user_passes_test(lambda u: u.is_doctor)
+@user_passes_test(lambda u: hasattr(u, 'doctor'))
 def manage_appointment(request, pk):
-    appointment = Appointment.objects.get(pk=pk)
+    try:
+        appointment = Appointment.objects.get(pk=pk)
+    except Appointment.DoesNotExist:
+        return redirect('doctor_dashboard')
+    
     if request.method == 'POST':
         status = request.POST.get('status')
         appointment.status = status
         appointment.save()
         return redirect('doctor_dashboard')
+    
     return render(request, 'manage_appointment.html', {'appointment': appointment})
 
 # Prescription Views
 @login_required
-@user_passes_test(lambda u: u.is_doctor)
+@user_passes_test(lambda u: hasattr(u, 'doctor'))
 def create_prescription(request):
     if request.method == 'POST':
         form = PrescriptionForm(request.POST)
@@ -115,13 +144,14 @@ def create_prescription(request):
         form = PrescriptionForm()
     return render(request, 'create_prescription.html', {'form': form})
 
-# Billing View (new)
+# Billing View
 @login_required
 def billing_list(request):
-    if request.user.is_patient:
+    if hasattr(request.user, 'patient'):
         bills = Billing.objects.filter(patient=request.user.patient)
-    elif request.user.is_doctor:
-        bills = Billing.objects.all()  # Or customize
+    elif hasattr(request.user, 'doctor'):
+        bills = Billing.objects.filter(doctor=request.user.doctor)
     else:
         bills = Billing.objects.none()
+    
     return render(request, 'billing_list.html', {'bills': bills})

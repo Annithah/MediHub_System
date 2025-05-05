@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login | Hospital Management System</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .login-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-card h2 {
+            font-size: 28px;
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            box-sizing: border-box;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-login:hover {
+            background-color: #45a049;
+        }
+        .forgot-password,
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .forgot-password a,
+        .register-link a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .forgot-password a:hover,
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-card">
+            <h2>Login to Your Account</h2>
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" name="email" id="email" placeholder="Enter your email" required aria-label="Email Address">
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" placeholder="Enter your password" required aria-label="Password">
+                </div>
+
+                <div class="input-group">
+                    <label for="role">I am a</label>
+                    <select name="role" id="role" required aria-label="Select role">
+                        <option value="" disabled selected>Select your role</option>
+                        <option value="patient">Patient</option>
+                        <option value="doctor">Doctor</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-login">Login</button>
+
+                <div class="forgot-password">
+                    <p><a href="#">Forgot password?</a></p>
+                </div>
+
+                <div class="register-link">
+                    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+                </div>
+
+                {% if error_message %}
+                    <p class="error-message">{{ error_message }}</p>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>
