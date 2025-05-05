@@ -21,7 +21,4 @@ from SmartMediHub.views import login_view  # import your login view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('SmartMediHub.urls')),
-    path('login/', login_view, name='login'),  
-    path('logout/', include('django.contrib.auth.urls')), 
-    
 ]

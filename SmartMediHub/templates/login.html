@@ -96,17 +96,17 @@
 
                 <div class="input-group">
                     <label for="email">Email Address</label>
-                    <input type="email" name="email" id="email" placeholder="Enter your email" required aria-label="Email Address">
+                    <input type="email" name="email" id="email" placeholder="Enter your email" required>
                 </div>
 
                 <div class="input-group">
                     <label for="password">Password</label>
-                    <input type="password" name="password" id="password" placeholder="Enter your password" required aria-label="Password">
+                    <input type="password" name="password" id="password" placeholder="Enter your password" required>
                 </div>
 
                 <div class="input-group">
                     <label for="role">I am a</label>
-                    <select name="role" id="role" required aria-label="Select role">
+                    <select name="role" id="role" required>
                         <option value="" disabled selected>Select your role</option>
                         <option value="patient">Patient</option>
                         <option value="doctor">Doctor</option>
@@ -116,12 +116,10 @@
 
                 <button type="submit" class="btn-login">Login</button>
 
-                <div class="forgot-password">
-                    <p><a href="#">Forgot password?</a></p>
-                </div>
+        
 
                 <div class="register-link">
-                    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+                    <p>Don't have an account? <a href="{% url 'index' %}">Register here</a></p>
                 </div>
 
                 {% if error_message %}

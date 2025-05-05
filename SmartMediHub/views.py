@@ -35,6 +35,11 @@ def patient_signup(request):
         form = PatientSignUpForm()
     return render(request, 'login.html', {'form': form})
 
+def login_view(request):
+    return render(request,'login.html')
+def appointment(request):
+    return render(request,'appointment.html')
+
 # Custom Login View
 def login_view(request):
     if request.method == 'POST':
@@ -54,7 +59,7 @@ def login_view(request):
                 return redirect('index')  # fallback
     else:
         form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request,'login.html', {'form': form})
 
 # Patient Dashboard
 @login_required
@@ -155,3 +160,24 @@ def billing_list(request):
         bills = Billing.objects.none()
     
     return render(request, 'billing_list.html', {'bills': bills})
+
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+
+        if password1 != password2:
+            messages.error(request, 'Passwords do not match')
+            return redirect('register')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already exists')
+            return redirect('register')
+
+        user = User.objects.create_user(username=username, email=email, password=password1)
+        login(request, user)
+        return redirect('home')  # or wherever you want to go after registration
+
+    return render(request, 'register.html')
