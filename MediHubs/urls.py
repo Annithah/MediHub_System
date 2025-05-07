@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from SmartMediHub.views import login_view  # import your login view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
