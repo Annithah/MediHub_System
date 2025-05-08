@@ -1,0 +1,154 @@
+{% comment %}
+    This is the base template for the authentication pages of the MediHub system.
+    It includes a header, footer, and navigation bar that are shared across all authentication-related pages.
+    you can modify the styles the way you want.😁😁
+    {% endcomment %}
+    
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Authenticate | MediHub{% endblock %}</title>
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/tooplate-style.css' %}">
+
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+
+  <!-- AUTHORIZATION-FOCUSED NAVBAR -->
+    <header>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 col-sm-5 text-align-start">
+          <a href="{% url 'auth_application:home' %}" class="navbar-brand">MediHub</a>
+        </div>
+        <div class="col-md-8 col-sm-7 text-align-right">
+          <span class="email-icon"><i class="fa fa-envelope-o"></i> <a href="#">Medihub@info.com</a></span>
+          {% if user.is_authenticated %}
+            <a href="{% url 'auth_application:logout' %}" class="date-icon">Logout</a>
+          {% else %}
+            <a href="{% url 'auth_application:login' %}" class="date-icon">Login</a>
+            <a href="{% url 'auth_application:register' %}" class="date-icon">Register</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MENU -->
+  <section class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon icon-bar"></span>
+          <span class="icon icon-bar"></span>
+          <span class="icon icon-bar"></span>
+        </button>
+        <a href="{% url 'auth_application:home' %}" class="navbar-brand">MediHub</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#top" class="smoothScroll">Home</a></li>
+          <li><a href="#about" class="smoothScroll">About Us</a></li>
+          <li><a href="#team" class="smoothScroll">Doctors</a></li>
+          <li><a href="#news" class="smoothScroll">News</a></li>
+          <li><a href="#google-map" class="smoothScroll">Contact</a></li>
+          <li class="appointment-btn"><a href="{% url 'auth_application:register' %}">Create Account</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT AREA FOR AUTH PAGES -->
+  <main class="container my-5">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- SHARED FOOTER -->
+    <footer data-stellar-background-ratio="5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 col-sm-4">
+          <div class="footer-thumb">
+            <h4 class="wow fadeInUp" data-wow-delay="0.4s">Contact Info</h4>
+            <p>Fusce at libero iaculis, venenatis augue quis, pharetra lorem. Curabitur ut dolor eu elit consequat ultricies.</p>
+            <div class="contact-info">
+              <p><i class="fa fa-phone"></i> 079-513-0378</p>
+              <p><i class="fa fa-envelope-o"></i> <a href="#">medihub@info.com</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+          <div class="footer-thumb">
+            <h4 class="wow fadeInUp" data-wow-delay="0.4s">Latest News</h4>
+            <div class="latest-stories">
+              <div class="stories-image">
+                <a href="#"><img src="{% static 'images/news-image.jpg' %}" class="img-responsive" alt=""></a>
+              </div>
+              <div class="stories-info">
+                <a href="#"><h5>Amazing Technology</h5></a>
+                <span>May 01, 2025</span>
+              </div>
+            </div>
+            <div class="latest-stories">
+              <div class="stories-image">
+                <a href="#"><img src="{% static 'images/news-image.jpg' %}" class="img-responsive" alt=""></a>
+              </div>
+              <div class="stories-info">
+                <a href="#"><h5>New Healing Process</h5></a>
+                <span>April 20, 2025</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+          <div class="footer-thumb">
+            <div class="opening-hours">
+              <h4 class="wow fadeInUp" data-wow-delay="0.4s">Opening Hours</h4>
+              <p>All-Days<span>06:00 AM - 11:00 PM</span></p>
+              <p>Saturday <span>09:00 AM - 08:00 PM</span></p>
+            </div>
+            <ul class="social-icon">
+              <li><a href="https://www.facebook.com/tooplate" class="fa fa-facebook-square" attr="facebook icon"></a></li>
+              <li><a href="#" class="fa fa-twitter"></a></li>
+              <li><a href="#" class="fa fa-instagram"></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-12 border-top">
+          <div class="col-md-4 col-sm-6">
+            <div class="copyright-text">
+              <p>Copyright © 2025 MediHub</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6">
+            <div class="footer-link">
+              <a href="#">Laboratory Tests</a>
+              <a href="#">Departments</a>
+              <a href="#">Insurance Policy</a>
+            </div>
+          </div>
+          <div class="col-md-2 col-sm-2 text-align-center">
+            <div class="angle-up-btn">
+              <a href="#top" class="smoothScroll wow fadeInUp" data-wow-delay="1.2s"><i class="fa fa-angle-up"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CORE SCRIPTS -->
+  <script src="{% static 'js/jquery.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  {% block scripts %}{% endblock %}
+
+</body>
+</html>

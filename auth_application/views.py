@@ -13,7 +13,7 @@ def register(request):
             user = form.save()
             login(request, user)
             messages.success(request, 'Registration successful! Welcome!')
-            return redirect(request,'auth_application:home')  # Redirect to home or dashboard
+            return redirect('auth_application:home')  # removed request parameter from redirect which was causing the error
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
