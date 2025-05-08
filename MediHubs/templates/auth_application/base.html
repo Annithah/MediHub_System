@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="author" content="Tooplate">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>{% block title %}MediHub{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/tooplate-style.css' %}">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e8f5e9, #b2dfdb);
+      margin: 0;
+    }
+    .container { max-width: 1200px; margin: auto; }
+    .text-align-right { text-align: right; }
+    .text-align-start { text-align: left; }
+    .navbar-brand { font-size: 1.5em; color: #00796b !important; }
+    .navbar-nav li a { color: #00796b; }
+    .section-btn { padding: 10px 20px; background-color: #00796b; color: white; border-radius: 5px; }
+    .section-btn:hover { background-color: #004d40; }
+    .appointment-btn a { background-color: #00796b; color: white; padding: 10px 20px; border-radius: 5px; }
+    .appointment-btn a:hover { background-color: #004d40; }
+    .footer-link a, .contact-info a, .social-icon a { color: #00796b; }
+    .footer-link a:hover, .contact-info a:hover, .social-icon a:hover { color: #004d40; }
+    .form-control { background-color: #00796b; color: white; border: none; }
+    .form-control:hover { background-color: #004d40; }
+    .signup-container {
+      background-color: #ffffff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+      margin: 20px auto;
+    }
+    .signup-container h2 {
+      text-align: center;
+      color: #004d40;
+      margin-bottom: 30px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: #00695c;
+      font-weight: 600;
+    }
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #b2dfdb;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00796b;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #004d40;
+    }
+    .footer-link {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .footer-link a {
+      color: #00796b;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .footer-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body id="top" data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
+  <section class="preloader">
+    <div class="spinner">
+      <span class="spinner-rotate"></span>
+    </div>
+  </section>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 col-sm-5 text-align-start">
+          <a href="{% url 'auth_application:home' %}" class="navbar-brand">MediHub</a>
+        </div>
+        <div class="col-md-8 col-sm-7 text-align-right">
+          <span class="email-icon"><i class="fa fa-envelope-o"></i> <a href="#">Medihub@info.com</a></span>
+          {% if user.is_authenticated %}
+            <a href="{% url 'auth_application:logout' %}" class="date-icon">Logout</a>
+          {% else %}
+            <a href="{% url 'auth_application:login' %}" class="date-icon">Login</a>
+            <a href="{% url 'auth_application:register' %}" class="date-icon">Register</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MENU -->
+  <section class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon icon-bar"></span>
+          <span class="icon icon-bar"></span>
+          <span class="icon icon-bar"></span>
+        </button>
+        <a href="{% url 'auth_application:home' %}" class="navbar-brand">MediHub</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#top" class="smoothScroll">Home</a></li>
+          <li><a href="#about" class="smoothScroll">About Us</a></li>
+          <li><a href="#team" class="smoothScroll">Doctors</a></li>
+          <li><a href="#news" class="smoothScroll">News</a></li>
+          <li><a href="#google-map" class="smoothScroll">Contact</a></li>
+          <li class="appointment-btn"><a href="{% url 'auth_application:register' %}">Create Account</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOME -->
+  <section id="home" class="slider" data-stellar-background-ratio="0.5">
+    <div class="container">
+      <div class="row">
+        <div class="owl-carousel owl-theme">
+          <div class="item item-first">
+            <div class="caption">
+              <div class="col-md-offset-1 col-md-10">
+                <h3>With MediHub</h3>
+                <h1>Healthy Living</h1>
+                <a href="#team" class="section-btn btn btn-default smoothScroll">Meet Our Doctors</a>
+              </div>
+            </div>
+          </div>
+          <div class="item item-second">
+            <div class="caption">
+              <div class="col-md-offset-1 col-md-10">
+                <h3>With MediHub</h3>
+                <h1>New Lifestyle</h1>
+                <a href="#about" class="section-btn btn btn-default btn-gray smoothScroll">More About Us</a>
+              </div>
+            </div>
+          </div>
+          <div class="item item-third">
+            <div class="caption">
+              <div class="col-md-offset-1 col-md-10">
+                <h3>With MediHub</h3>
+                <h1>Your Health Benefits</h1>
+                <a href="#news" class="section-btn btn btn-default btn-blue smoothScroll">Read Stories</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-sm-6">
+          <div class="about-info">
+            <h2 class="wow fadeInUp" data-wow-delay="0.6s">Welcome to Your <i class="fa fa-h-square"></i>ealth Community</h2>
+            <div class="wow fadeInUp" data-wow-delay="0.8s">
+              <p>Your trusted partner in modern healthcare management. At MediHub, we simplify hospital operations and ensure seamless communication between patients, doctors, and administrators all in one secure, smart platform.</p>
+            </div>
+            <figure class="profile wow fadeInUp" data-wow-delay="1s">
+              <img src="{% static 'images/author-image.jpg' %}" class="img-responsive" alt="">
+              <figcaption>
+                <h3>Dr. Gisubizo Prince</h3>
+                <p>General Principal</p>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team" data-stellar-background-ratio="1">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-sm-6">
+          <div class="about-info">
+            <h2 class="wow fadeInUp" data-wow-delay="0.1s">Our Doctors</h2>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-4 col-sm-6">
+          <div class="team-thumb wow fadeInUp" data-wow-delay="0.2s">
+            <img src="{% static 'images/team-image1.jpg' %}" class="img-responsive" alt="">
+            <div class="team-info">
+              <h3>Gisubizo Prince</h3>
+              <p>General Principal</p>
+              <div class="team-contact-info">
+                <p><i class="fa fa-phone"></i> 079-127-7830</p>
+                <p><i class="fa fa-envelope-o"></i> <a href="#">gisubizo@gmail.com</a></p>
+              </div>
+              <ul class="social-icon">
+                <li><a href="#" class="fa fa-linkedin-square"></a></li>
+                <li><a href="#" class="fa fa-envelope-o"></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="team-thumb wow fadeInUp" data-wow-delay="0.4s">
+            <img src="{% static 'images/team-image2.jpg' %}" class="img-responsive" alt="">
+            <div class="team-info">
+              <h3>Shyaka Gexan</h3>
+              <p>Pregnancy</p>
+              <div class="team-contact-info">
+                <p><i class="fa fa-phone"></i> 078-310-5555</p>
+                <p><i class="fa fa-envelope-o"></i> <a href="#">shyaka@gmail.com</a></p>
+              </div>
+              <ul class="social-icon">
+                <li><a href="#" class="fa fa-facebook-square"></a></li>
+                <li><a href="#" class="fa fa-envelope-o"></a></li>
+                <li><a href="#" class="fa fa-flickr"></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="team-thumb wow fadeInUp" data-wow-delay="0.6s">
+            <img src="{% static 'images/team-image3.jpg' %}" class="img-responsive" alt="">
+            <div class="team-info">
+              <h3>Byukusenge Pierrone</h3>
+              <p>Cardiology</p>
+              <div class="team-contact-info">
+                <p><i class="fa fa-phone"></i> 072-102-3955</p>
+                <p><i class="fa fa-envelope-o"></i> <a href="#">pierrone@gmail.com</a></p>
+              </div>
+              <ul class="social-icon">
+                <li><a href="#" class="fa fa-twitter"></a></li>
+                <li><a href="#" class="fa fa-envelope-o"></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section id="news" data-stellar-background-ratio="2.5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <div class="section-title wow fadeInUp" data-wow-delay="0.1s">
+            <h2>Latest News</h2>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="news-thumb wow fadeInUp" data-wow-delay="0.4s">
+            <a href="news-detail.html">
+              <img src="{% static 'images/news-image1.jpg' %}" class="img-responsive" alt="">
+            </a>
+            <div class="news-info">
+              <span>May 01, 2025</span>
+              <h3><a href="news-detail.html">About Amazing Technology</a></h3>
+              <p>MediHub is built with cutting-edge technology to ensure speed, security, and efficiency. From real-time data tracking to automated appointment systems, our platform empowers hospitals to deliver smarter and faster healthcare services</p>
+              <div class="author">
+                <img src="{% static 'images/anitah.png' %}" class="img-responsive" alt="">
+                <div class="author-info">
+                  <h5>Uwihirwe Anitha</h5>
+                  <p>CEO / Founder</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="news-thumb wow fadeInUp" data-wow-delay="0.6s">
+            <a href="news-detail.html">
+              <img src="{% static 'images/news-image2.jpg' %}" class="img-responsive" alt="">
+            </a>
+            <div class="news-info">
+              <span>April 20, 2025</span>
+              <h3><a href="news-detail.html">Introducing a new healing process</a></h3>
+              <p>Experience a new era of healing — where innovation meets care, and every patient journey is reimagined with precision and compassion.</p>
+              <div class="author">
+                <img src="{% static 'images/price.png' %}" class="img-responsive" alt="">
+                <div class="author-info">
+                  <h5>Marirungu Price</h5>
+                  <p>General Director</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="news-thumb wow fadeInUp" data-wow-delay="0.8s">
+            <a href="news-detail.html">
+              <img src="{% static 'images/news-image3.jpg' %}" class="img-responsive" alt="">
+            </a>
+            <div class="news-info">
+              <span>March 27, 2025</span>
+              <h3><a href="news-detail.html">Explore the Latest Breakthroughs in Medical Innovation </a></h3>
+              <p>Empowering Clinics and Patients with Smart, Seamless Care.</p>
+              <div class="author">
+                <img src="{% static 'images/bellah.png' %}" class="img-responsive" alt="">
+                <div class="author-info">
+                  <h5>Bellah Igola</h5>
+                  <p>Online Advertising</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% comment %} <!-- SIGNUP FORM -->
+  <section id="appointment">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-sm-6 signup-container">
+          <form id="signup-form" role="form" method="post" action="{% url 'auth_application:register' %}">
+            {% csrf_token %}
+            <div class="section-title wow fadeInUp" data-wow-delay="0.4s">
+              <h2>Sign Up</h2>
+            </div>
+            <div class="wow fadeInUp" data-wow-delay="0.8s">
+              <div class="col-md-6 col-sm-6">
+                <label for="id_first_name">First Name</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                  <p class="error">{{ form.first_name.errors }}</p>
+                {% endif %}
+              </div>
+              <div class="col-md-6 col-sm-6">
+                <label for="id_last_name">Last Name</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                  <p class="error">{{ form.last_name.errors }}</p>
+                {% endif %}
+              </div>
+              <div class="col-md-12 col-sm-12">
+                <label for="id_email">Email</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                  <p class="error">{{ form.email.errors }}</p>
+                {% endif %}
+              </div>
+              <div class="col-md-12 col-sm-12">
+                <label for="id_password">Password</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                  <p class="error">{{ form.password.errors }}</p>
+                {% endif %}
+              </div>
+              <div class="col-md-12 col-sm-12">
+                <label for="id_role">Role</label>
+                {{ form.role }}
+                {% if form.role.errors %}
+                  <p class="error">{{ form.role.errors }}</p>
+                {% endif %}
+              </div>
+              <div class="col-md-12 col-sm-12">
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+              </div>
+              <div class="col-md-12 col-sm-12 footer-link">
+                <p>Already have an account? <a href="{% url 'auth_application:login' %}">Login</a></p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section> {% endcomment %}
+
+  <!-- GOOGLE MAP -->
+  <section id="google-map">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3647.3030413476204!2d100.5641230193719!3d13.757206847615207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xf51ce6427b7918fc!2sG+Tower!5e0!3m2!1sen!2sth!4v1510722015945" width="100%" height="350" frameborder="0" style="border:0" allowfullscreen></iframe>
+  </section>
+
+  <!-- FOOTER -->
+  <footer data-stellar-background-ratio="5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 col-sm-4">
+          <div class="footer-thumb">
+            <h4 class="wow fadeInUp" data-wow-delay="0.4s">Contact Info</h4>
+            <p>Fusce at libero iaculis, venenatis augue quis, pharetra lorem. Curabitur ut dolor eu elit consequat ultricies.</p>
+            <div class="contact-info">
+              <p><i class="fa fa-phone"></i> 079-513-0378</p>
+              <p><i class="fa fa-envelope-o"></i> <a href="#">medihub@info.com</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+          <div class="footer-thumb">
+            <h4 class="wow fadeInUp" data-wow-delay="0.4s">Latest News</h4>
+            <div class="latest-stories">
+              <div class="stories-image">
+                <a href="#"><img src="{% static 'images/news-image.jpg' %}" class="img-responsive" alt=""></a>
+              </div>
+              <div class="stories-info">
+                <a href="#"><h5>Amazing Technology</h5></a>
+                <span>May 01, 2025</span>
+              </div>
+            </div>
+            <div class="latest-stories">
+              <div class="stories-image">
+                <a href="#"><img src="{% static 'images/news-image.jpg' %}" class="img-responsive" alt=""></a>
+              </div>
+              <div class="stories-info">
+                <a href="#"><h5>New Healing Process</h5></a>
+                <span>April 20, 2025</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+          <div class="footer-thumb">
+            <div class="opening-hours">
+              <h4 class="wow fadeInUp" data-wow-delay="0.4s">Opening Hours</h4>
+              <p>All-Days<span>06:00 AM - 11:00 PM</span></p>
+              <p>Saturday <span>09:00 AM - 08:00 PM</span></p>
+            </div>
+            <ul class="social-icon">
+              <li><a href="https://www.facebook.com/tooplate" class="fa fa-facebook-square" attr="facebook icon"></a></li>
+              <li><a href="#" class="fa fa-twitter"></a></li>
+              <li><a href="#" class="fa fa-instagram"></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-12 border-top">
+          <div class="col-md-4 col-sm-6">
+            <div class="copyright-text">
+              <p>Copyright © 2025 MediHub</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6">
+            <div class="footer-link">
+              <a href="#">Laboratory Tests</a>
+              <a href="#">Departments</a>
+              <a href="#">Insurance Policy</a>
+            </div>
+          </div>
+          <div class="col-md-2 col-sm-2 text-align-center">
+            <div class="angle-up-btn">
+              <a href="#top" class="smoothScroll wow fadeInUp" data-wow-delay="1.2s"><i class="fa fa-angle-up"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="{% static 'js/jquery.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.sticky.js' %}"></script>
+  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'js/wow.min.js' %}"></script>
+  <script src="{% static 'js/smoothscroll.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/custom.js' %}"></script>
+</body>
+</html>

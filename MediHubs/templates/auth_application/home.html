@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Home - MediHub{% endblock %}
+{% block content %}
+    <h2>Welcome to MediHub</h2>
+    {% if user.is_authenticated %}
+        <p>Hello, {{ user.first_name }} {{ user.last_name }}! You are logged in as a {{ user.role }}.</p>
+    {% else %}
+        <p>Please <a href="{% url 'auth_application:login' %}">login</a> or <a href="{% url 'auth_application:register' %}">register</a> to continue.</p>
+    {% endif %}
+{% endblock %}

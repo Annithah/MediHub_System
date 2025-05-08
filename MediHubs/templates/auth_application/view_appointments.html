@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Appointments</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .error { color: red; }
+        .success { color: green; }
+        .button { padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        .button:hover { background-color: #0056b3; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Appointments</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <p class="{% if message.tags == 'error' %}error{% else %}success{% endif %}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        
+        {% if appointments %}
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>{% if request.user.role == 'patient' %}Doctor{% else %}Patient{% endif %}</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    {% if request.user.role == 'doctor' %}<th>Actions</th>{% endif %}
+                </tr>
+                {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.appointment_date|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            {% if request.user.role == 'patient' %}
+                                Dr. {{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}
+                            {% else %}
+                                {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}
+                            {% endif %}
+                        </td>
+                        <td>{{ appointment.reason|truncatewords:10 }}</td>
+                        <td>{{ appointment.status|title }}</td>
+                        {% if request.user.role == 'doctor' %}
+                            <td>
+                                {% if appointment.status == 'pending' %}
+                                    <a href="{% url 'appointment_app:approve_appointment' appointment.id %}" class="button">Approve</a>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No appointments found.</p>
+        {% endif %}
+        
+        <p><a href="{% url 'appointment_app:dashboard' %}" class="button">Back to Dashboard</a></p>
+    </div>
+</body>
+</html>

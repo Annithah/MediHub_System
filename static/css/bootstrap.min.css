@@ -147,9 +147,12 @@ button:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(102, 175, 233, 0.6);
 }
+/* {
+  
+
   appearance: button;
   cursor: pointer;
-}
+} */
 button[disabled],
 html input[disabled] {
   cursor: default;
@@ -181,30 +184,7 @@ input[type="search"] {
   appearance: textfield;
 }
 
-.forms{
-  border-radius: 10px;
-  width: 100%;
-  background-color:whitesmoke;
-  margin-top: 17px;
-  font-size: 14px;
-  border-style: none;
-  font-family: 'poppins',sans-serif;
-}
-.fomrs-sel-doc{
-  border-radius: 10px;
-  width: 100%;
-  background-color:whitesmoke;
-  margin-top: 17px;
-  font-size: 14px;
-  border-style: none;
-  font-family: 'poppins',sans-serif;
-}
-#forms{
-  border-radius: 10px;
-  background-color: orange;
 
-  /* margin-bottom: -9px; */
-}
 
 
 

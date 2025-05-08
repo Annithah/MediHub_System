@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .error { color: red; }
+        .success { color: green; }
+        .button { padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        .button:hover { background-color: #0056b3; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, {{ request.user.first_name }} {{ request.user.last_name }}</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <p class="{% if message.tags == 'error' %}error{% else %}success{% endif %}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        
+        {% if user_role == 'patient' %}
+            <h2>Patient Dashboard</h2>
+            <p><a href="{% url 'appointment_app:book_appointment' %}" class="button">Book Appointment</a></p>
+            <p><a href="{% url 'appointment_app:view_appointments' %}" class="button">View My Appointments</a></p>
+        {% elif user_role == 'doctor' %}
+            <h2>Doctor Dashboard</h2>
+            <p><a href="{% url 'appointment_app:view_appointments' %}" class="button">View Appointments</a></p>
+        {% endif %}
+        
+        <h3>Your Appointments</h3>
+        {% if appointments %}
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>{% if user_role == 'patient' %}Doctor{% else %}Patient{% endif %}</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.appointment_date|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            {% if user_role == 'patient' %}
+                                Dr. {{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}
+                            {% else %}
+                                {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}
+                            {% endif %}
+                        </td>
+                        <td>{{ appointment.status|title }}</td>
+                        <td>
+                            {% if user_role == 'doctor' and appointment.status == 'pending' %}
+                                <a href="{% url 'appointment_app:approve_appointment' appointment.id %}" class="button">Approve</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No appointments found.</p>
+        {% endif %}
+        
+        <p><a href="{% url 'auth_application:logout' %}" class="button">Logout</a></p>
+    </div>
+</body>
+</html>

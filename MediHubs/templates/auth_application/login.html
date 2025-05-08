@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Login - MediHub{% endblock %}
+{% block content %}
+<div class="login-container">
+  <h2>MediHub Login</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+</form>
+<p>Don't have an account? <a href="{% url 'auth_application:register' %}">Register</a></p>
+</div>
+{% endblock %}
+

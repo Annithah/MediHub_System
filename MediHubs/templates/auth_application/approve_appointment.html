@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Approve Appointment</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        .error { color: red; }
+        .success { color: green; }
+        .button { padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        .button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Approve Appointment</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <p class="{% if message.tags == 'error' %}error{% else %}success{% endif %}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        
+        <p><strong>Patient:</strong> {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</p>
+        <p><strong>Date:</strong> {{ appointment.appointment_date|date:"Y-m-d H:i" }}</p>
+        <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+        <p><strong>Status:</strong> {{ appointment.status|title }}</p>
+        
+        {% if appointment.status == 'pending' %}
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="button">Confirm Appointment</button>
+            </form>
+        {% else %}
+            <p>This appointment cannot be confirmed.</p>
+        {% endif %}
+        
+        <p><a href="{% url 'appointment_app:dashboard' %}" class="button">Back to Dashboard</a></p>
+    </div>
+</body>
+</html>

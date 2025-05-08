@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MediHub Login</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e8f5e9, #b2dfdb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-container {
+      background-color: #ffffff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+      width: 400px;
+    }
+
+    .login-container h2 {
+      text-align: center;
+      color: #004d40;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+          margin-bottom: 6px;
+      color: #00695c;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #b2dfdb;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00796b;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #004d40;
+    }
+
+    .footer-link {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .footer-link a {
+      color: #00796b;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .footer-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h2>MediHub Login</h2>
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+
+      <label for="id_username">Username or Email</label>
+      {{ form.username }}
+
+      <label for="id_password">Password</label>
+      {{ form.password }}
+
+      <label for="id_role">Login As</label>
+      <select name="role" id="id_role" required>
+        <option value="">-- Select Role --</option>
+        <option value="patient">Patient</option>
+        <option value="doctor">Doctor</option>
+      </select>
+
+      <button type="submit">Login</button>
+
+      <div class="footer-link">
+        <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>
