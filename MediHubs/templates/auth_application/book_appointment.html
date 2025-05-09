@@ -12,8 +12,6 @@
         input, select, textarea { width: 100%; padding: 8px; box-sizing: border-box; }
         .button { padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; }
         .button:hover { background-color: #0056b3; }
-        .availability-list { margin-top: 10px; }
-        .availability-item { padding: 5px; }
         .info { color: #555; }
     </style>
 </head>
@@ -37,22 +35,11 @@
             </div>
             <div class="form-group">
                 <label for="id_appointment_date">Appointment Date and Time</label>
-                {{ form.appointment_date }}
+                <input type="datetime-local" id="id_appointment_date" name="appointment_date" required>
                 {% if form.appointment_date.errors %}
                     <p class="error">{{ form.appointment_date.errors }}</p>
                 {% endif %}
-                {% if availabilities %}
-                    <div class="availability-list">
-                        <p class="info">Available time slots for selected doctor:</p>
-                        {% for availability in availabilities %}
-                            <div class="availability-item">
-                                {{ availability.start_time|date:"Y-m-d H:i" }} to {{ availability.end_time|date:"Y-m-d H:i" }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p class="error">No available time slots for this doctor. Please select another doctor or contact support.</p>
-                {% endif %}
+                <p class="info">Select your preferred date and time for the appointment.</p>
             </div>
             <div class="form-group">
                 <label for="id_reason">Reason for Appointment</label>

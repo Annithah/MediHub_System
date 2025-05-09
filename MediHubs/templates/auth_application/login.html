@@ -1,9 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'auth.html' %}
+{% comment %} This template extends the base auth.html template!!! {% endcomment %}
+
 {% block title %}Login - MediHub{% endblock %}
 {% block content %}
 <div class="login-container">
   <h2>MediHub Login</h2>
-  <form method="post" enctype="multipart/form-data">
+  <form method="POST"action='{$ url 'login' $}' enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Login</button>

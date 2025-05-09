@@ -46,7 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     user_permissions = models.ManyToManyField(
         'auth.Permission',
-        related_name='auth_application_user_permissions',  # Unique reverse accessor
+        related_name='auth_application_user_permissions',  
         blank=True,
         help_text='Specific permissions for this user.',
         verbose_name='user permissions',

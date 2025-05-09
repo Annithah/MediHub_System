@@ -32,3 +32,4 @@ def book_appointment(request):
     else:
         form = AppointmentForm()
     return render(request, 'book_appointment.html', {'form': form})
+

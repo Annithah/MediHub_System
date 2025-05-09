@@ -5,6 +5,8 @@ from .forms import RegistrationForm, LoginForm
 
 def home_view(request):
     return render(request, 'home.html')
+def dashboard(request):
+    return render(request, 'book_appointment.html')
 
 def register(request):
     if request.method == 'POST':
@@ -13,7 +15,7 @@ def register(request):
             user = form.save()
             login(request, user)
             messages.success(request, 'Registration successful! Welcome!')
-            return redirect(request,'auth_application:home')  # Redirect to home or dashboard
+            return redirect('auth_application:dashboard')  # removed request parameter from redirect which was causing the error
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
@@ -30,7 +32,7 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'Login successful!')
-                return redirect('auth_application:home')  # Redirect to home or dashboard
+                return redirect('auth_application:dashboard')  # Redirect to home or dashboard
             else:
                 messages.error(request, 'Invalid email or password.')
         else:

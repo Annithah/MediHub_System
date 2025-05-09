@@ -1,9 +1,38 @@
 from django import forms
 from .models import User
-
+"""
+i changed the this file by adding attrs as attributes to the widgets to be able to add the class and placeholder to the widgets
+this is similar to <input type="text" class="form-control" placeholder="First Name"> in html
+😁😁😁
+"""
 class RegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput)
+    email= forms.EmailField(widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Email',
+        }))
+    first_name = forms.CharField(widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'First Name',
+        }))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Last Name',
+        }))
+    phone = forms.CharField(widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Phone Number',
+        }))
+    role = forms.ChoiceField(choices=[('patient', 'Patient'), ('doctor', 'Doctor'),('admin','Admin')], widget=forms.Select(attrs={
+            'class': 'form-control',
+        }))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Password',
+        }))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirm Password',
+        }))
 
     class Meta:
         model = User
@@ -28,5 +57,11 @@ class RegistrationForm(forms.ModelForm):
         return user
 
 class LoginForm(forms.Form):
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    email= forms.EmailField(widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Email',
+        }))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Password',
+        }))
