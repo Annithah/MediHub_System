@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from auth_application.models import User
-from .models import Appointment, Availability
+from .models import Doctor, Appointment, Availability
 from .forms import AppointmentForm
 
 @login_required
@@ -15,39 +15,51 @@ def dashboard(request):
     context = {'user_role': request.user.role}
     
     if request.user.role == 'patient':
-        appointments = Appointment.objects.filter(patient=request.user).order_by('-appointment_date')
+        appointments = Appointment.objects.filter(patient=request.user).order_by('-date_time')
         context['appointments'] = appointments
     elif request.user.role == 'doctor':
-        appointments = Appointment.objects.filter(doctor=request.user).order_by('-appointment_date')
+        appointments = Appointment.objects.filter(doctor=request.user).order_by('-date_time')
         context['appointments'] = appointments
     
     return render(request, 'dashboard.html', context)
 
 @login_required
-def book_appointment(request):
+def list_doctors(request):
     if request.user.role != 'patient':
         messages.error(request, 'Only patients can book appointments.')
         return redirect('appointment_app:dashboard')
     
+    doctors = Doctor.objects.all()
+    return render(request, 'appointment_app/list_doctors.html', {'doctors': doctors})
+
+@login_required
+def book_appointment(request, doctor_id):
+    if request.user.role != 'patient':
+        messages.error(request, 'Only patients can book appointments.')
+        return redirect('appointment_app:dashboard')
+    
+    try:
+        selected_doctor = Doctor.objects.get(user__id=doctor_id)
+    except Doctor.DoesNotExist:
+        messages.error(request, 'Doctor not found.')
+        return redirect('appointment_app:list_doctors')
+
     if request.method == 'POST':
         form = AppointmentForm(request.POST)
         if form.is_valid():
             appointment = form.save(commit=False)
             appointment.patient = request.user
-            # Validate doctor role
-            if appointment.doctor.role != 'doctor':
-                messages.error(request, 'Selected user is not a doctor.')
-                return render(request, 'book_appointment.html', {'form': form})
+            appointment.doctor = selected_doctor.user
             # Check availability
             availability = Availability.objects.filter(
                 doctor=appointment.doctor,
-                start_time__lte=appointment.appointment_date,
-                end_time__gte=appointment.appointment_date,
+                start_time__lte=appointment.date_time,
+                end_time__gte=appointment.date_time,
                 is_booked=False
             ).first()
             if not availability:
                 messages.error(request, 'Selected time slot is not available.')
-                return render(request, 'book_appointment.html', {'form': form})
+                return render(request, 'appointment_app/book_appointment.html', {'form': form, 'selected_doctor': selected_doctor})
             appointment.save()
             availability.is_booked = True
             availability.save()
@@ -56,10 +68,11 @@ def book_appointment(request):
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
-        form = AppointmentForm()
-        # Limit doctor choices to users with role 'doctor'
-        form.fields['doctor'].queryset = User.objects.filter(role='doctor')
-    return render(request, 'book_appointment.html', {'form': form})
+        
+        initial_data = {'doctor': selected_doctor.user.id}
+        form = AppointmentForm(initial=initial_data)
+        form.fields['doctor'].widget = form.fields['doctor'].hidden_widget()  
+    return render(request, 'appointment_app/book_appointment.html', {'form': form, 'selected_doctor': selected_doctor})
 
 @login_required
 def approve_appointment(request, appointment_id):
@@ -86,8 +99,8 @@ def view_appointments(request):
         return redirect('auth_application:login')
     
     if request.user.role == 'patient':
-        appointments = Appointment.objects.filter(patient=request.user).order_by('-appointment_date')
+        appointments = Appointment.objects.filter(patient=request.user).order_by('-date_time')
     else:  # doctor
-        appointments = Appointment.objects.filter(doctor=request.user).order_by('-appointment_date')
+        appointments = Appointment.objects.filter(doctor=request.user).order_by('-date_time')
     
     return render(request, 'view_appointments.html', {'appointments': appointments})

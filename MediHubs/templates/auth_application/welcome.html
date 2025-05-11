@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Book Appointment - MediHub</title>
+    <title>Welcome to MediHub</title>
     <style>
         body {
             font-family: 'poppins', sans-serif;
@@ -22,50 +22,18 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-        .heading {
+        .welcome {
             font-size: 28px;
             font-weight: bold;
             color: #008080; /* Teal heading */
             margin-bottom: 20px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
+        .description {
             font-size: 16px;
             color: #555555; /* Dark gray text */
-            margin-bottom: 5px;
-        }
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            font-size: 16px;
-            border: 1px solid #B0C4DE; /* Teal border */
-            border-radius: 4px;
-            background-color: #FFFFFF;
-            color: #555555;
-            box-sizing: border-box;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #A3BFFA; /* Green focus */
-            box-shadow: 0 0 5px rgba(163, 191, 250, 0.5);
-        }
-        .doctor-info {
-            font-size: 16px;
-            color: #555555; /* Dark gray text */
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .error {
-            color: #FF0000; /* Red for errors */
-            font-size: 14px;
-            margin-top: 5px;
+            line-height: 1.6;
+            margin-bottom: 30px;
         }
         .button {
             display: inline-block;
@@ -77,8 +45,6 @@
             font-size: 16px;
             margin: 0 10px;
             transition: background-color 0.3s;
-            border: none;
-            cursor: pointer;
         }
         .button:hover {
             background-color: #7D9ED8; /* Darker green on hover */
@@ -110,12 +76,10 @@
                 margin: 20px;
                 padding: 20px;
             }
-            .heading {
+            .welcome {
                 font-size: 24px;
             }
-            .form-group label,
-            .form-group input,
-            .form-group textarea {
+            .description {
                 font-size: 14px;
             }
             .button {
@@ -131,43 +95,25 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="heading">Book an Appointment</h1>
-
+        <h1 class="welcome">Welcome {% if patient_name %}{{ patient_name }}{% else %}Patient{% endif %}!</h1>
+        
         {% comment %} <div class="language-selection">
             <label for="language">Choose Language:</label>
             <select id="language" name="language" onchange="window.location.href=this.value;">
                 <option value="{% url 'auth_application:set_language' 'en' %}" {% if request.LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
                 <option value="{% url 'auth_application:set_language' 'es' %}" {% if request.LANGUAGE_CODE == 'es' %}selected{% endif %}>Spanish</option>
                 <option value="{% url 'auth_application:set_language' 'fr' %}" {% if request.LANGUAGE_CODE == 'fr' %}selected{% endif %}>French</option>
+                
             </select>
-        </div> {% endcomment %}
+        </div>  {% endcomment %}
 
-        {% if messages %}
-            {% for message in messages %}
-                <p class="error">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-
-        <div class="doctor-info">
-            <strong>Doctor:</strong> {{ selected_doctor.user.first_name }} {{ selected_doctor.user.last_name }} ({{ selected_doctor.specialty.name|default:"General Practitioner" }})
+        <p class="description">
+            MediHub is your trusted platform for managing healthcare needs. Here’s how it works: after logging in, you can book appointments with your preferred doctor by selecting a date and time that suits you. Once your appointment is confirmed, you’ll receive a notification, and you can even opt for a telemedicine consultation if needed. We’re here to make your healthcare experience seamless and efficient.
+        </p>
+        <div>
+            <a href="{% url 'appointment_app:book_appointment' %}" class="button">Book Appointment</a>
+            <a href="{% url 'auth_application:logout' %}" class="button">Logout</a>
         </div>
-
-        <form method="POST" action="{% url 'appointment_app:book_appointment' selected_doctor.user.id %}">
-            {% csrf_token %}
-            <input type="hidden" name="doctor" value="{{ selected_doctor.user.id }}">
-            <div class="form-group">
-                <label for="date_time">Date and Time</label>
-                <input type="datetime-local" name="date_time" id="date_time" required>
-            </div>
-            <div class="form-group">
-                <label for="purpose">Purpose of Appointment</label>
-                <textarea name="purpose" id="purpose" rows="4" placeholder="Describe the reason for your visit (e.g., 'General checkup')" required></textarea>
-            </div>
-            <div>
-                <button type="submit" class="button">Submit Appointment</button>
-                <a href="{% url 'appointment_app:list_doctors' %}" class="button">Back to Doctors</a>
-            </div>
-        </form>
     </div>
 </body>
 </html>

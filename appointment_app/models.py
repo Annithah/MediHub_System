@@ -19,6 +19,7 @@ class Doctor(models.Model):
     qualification = models.TextField(blank=True, null=True)
     experience_years = models.IntegerField(validators=[MinValueValidator(0)], default=0)
     hospital_affiliation = models.CharField(max_length=255, blank=True, null=True)
+    profile_image = models.ImageField(upload_to='doctor_images/', null=True, blank=True)  # Added for doctor's photo
 
     class Meta:
         db_table = 'doctors'
@@ -29,7 +30,7 @@ class Doctor(models.Model):
 class Appointment(models.Model):
     patient = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='patient_appointments')
     doctor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='doctor_appointments')
-    appointment_date = models.DateTimeField()
+    date_time = models.DateTimeField()  # Renamed to match templates
     status = models.CharField(
         max_length=20,
         choices=[
@@ -40,7 +41,7 @@ class Appointment(models.Model):
         ],
         default='pending'
     )
-    reason = models.TextField(blank=True, null=True)
+    purpose = models.TextField(blank=True, null=True)  # Renamed to match templates
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -55,7 +56,7 @@ class Appointment(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Appointment with Dr. {self.doctor.first_name} on {self.appointment_date}"
+        return f"Appointment with Dr. {self.doctor.first_name} on {self.date_time}"
 
 class Feedback(models.Model):
     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, related_name='feedback')

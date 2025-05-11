@@ -7,15 +7,15 @@ class User(AbstractUser):
     is_nurse = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     
-    # Override the reverse relationship for groups and user_permissions
+    
     groups = models.ManyToManyField(
         Group,
-        related_name='smartmedi_users',  # Custom related_name to avoid conflict
+        related_name='smartmedi_users', 
         blank=True
     )
     user_permissions = models.ManyToManyField(
         Permission,
-        related_name='smartmedi_user_permissions',  # Custom related_name to avoid conflict
+        related_name='smartmedi_user_permissions',  
         blank=True
     )
 
