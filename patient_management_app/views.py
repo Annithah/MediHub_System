@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import PatientProfile, MedicalRecord, Billing, PatientNotification
-from .forms import PatientProfileForm, MedicalRecordForm, BillingForm
+from forms import PatientProfileForm, MedicalRecordForm, BillingForm
 from appointment_app.models import Appointment
 
 @login_required

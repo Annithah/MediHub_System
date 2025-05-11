@@ -5,6 +5,7 @@ from django.db.models import Q
 from auth_application.models import User
 from .models import Doctor, Appointment, Availability
 from .forms import *
+from patient_management_app.models import *
 
 @login_required
 def dashboard(request):
@@ -17,7 +18,7 @@ def dashboard(request):
         records = MedicalRecord.objects.filter(patient=request.user).order_by('-date')
         bills = Billing.objects.filter(patient=request.user).order_by('-date')
         notifications = PatientNotification.objects.filter(patient=request.user).order_by('-sent_at')
-        return render(request, 'appointment_app/dashboard.html', {
+        return render(request, 'dashboard.html', {
             'appointments': appointments,
             'records': records,
             'bills': bills,
@@ -26,7 +27,7 @@ def dashboard(request):
     elif request.user.role == 'doctor':
         doctor = Doctor.objects.get(user=request.user)
         appointments = Appointment.objects.filter(doctor=doctor).order_by('-date_time')
-        context['appointments'] = appointments
+        context = {'appointments': appointments}
     
     return render(request, 'dashboard.html', context)
 
@@ -78,6 +79,7 @@ def book_appointment(request, doctor_id):
                 amount=100.00,
                 description=f"Consultation fee for appointment with Dr. {selected_doctor.user.first_name} on {appointment.date_time}",
                 status='Unpaid'
+
             )
             PatientNotification.objects.create(
                 patient=request.user,
@@ -87,7 +89,7 @@ def book_appointment(request, doctor_id):
             )
             
             messages.success(request, 'Appointment booked successfully!')
-            return redirect('patient_management_app:patient_dashboard')
+            return redirect('appointment_app:dashboard')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
@@ -110,7 +112,7 @@ def approve_appointment(request, appointment_id):
             PatientNotification.objects.create(
                 patient=appointment.patient,
                 appointment=appointment,
-                message=f"Your appointment with Dr. {appointment.doctor.first_name} on {appointment.date_time} has been confirmed.",
+                message=f"Your appointment with Dr. {appointment.doctor.user.first_name} on {appointment.date_time} has been confirmed.",
                 type='confirmation'
             )
             messages.success(request, 'Appointment confirmed successfully!')
@@ -118,7 +120,7 @@ def approve_appointment(request, appointment_id):
             messages.error(request, 'Appointment cannot be confirmed.')
         return redirect('appointment_app:dashboard')
     
-    return render(request, 'appointment_app/approve_appointment.html', {'appointment': appointment})
+    return render(request, 'approve_appointment.html', {'appointment': appointment})
 
 @login_required
 def view_appointments(request):

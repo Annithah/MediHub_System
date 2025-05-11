@@ -74,7 +74,7 @@ class Billing(models.Model):
         blank=True, 
         related_name='pm_billings'
     )
-    date = models.DateField(auto_now_add=False, help_text="Billing date.")
+    date = models.DateField(auto_now_add=True, help_text="Billing date.")
     amount = models.DecimalField(
         max_digits=10, 
         decimal_places=2, 

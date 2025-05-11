@@ -36,7 +36,7 @@ def login_view(request):
                 login(request, user)
                 messages.success(request, 'Login successful!')
                 if user.role == 'patient':
-                    return redirect('patient_management_app:patient_dashboard')
+                    return redirect('appointment_app:dashboard')
                 elif user.role == 'doctor':
                     return redirect('appointment_app:dashboard')
                 else:
