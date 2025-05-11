@@ -2,13 +2,131 @@
 <html>
 <head>
     <title>Approve Appointment</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .container { max-width: 600px; margin: auto; }
-        .error { color: red; }
-        .success { color: green; }
-        .button { padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; }
-        .button:hover { background-color: #0056b3; }
+ <style>
+        body {
+            font-family: 'poppins', sans-serif;
+            margin: 0;
+            background-color: #E6F0FA; /* Light teal background from homepage */
+            background-image: url('https://example.com/keyboard-image.jpg'); /* Placeholder for background image */
+            background-size: cover;
+            background-position: center;
+            background-opacity: 0.2; /* Faint background image */
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #FFFFFF; /* White background */
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #B0C4DE; /* Teal border */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .heading {
+            font-size: 28px;
+            font-weight: bold;
+            color: #008080; /* Teal heading */
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            color: #555555; /* Dark gray text */
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #B0C4DE; /* Teal border */
+            border-radius: 4px;
+            background-color: #FFFFFF;
+            color: #555555;
+            box-sizing: border-box;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #A3BFFA; /* Green focus */
+            box-shadow: 0 0 5px rgba(163, 191, 250, 0.5);
+        }
+        .doctor-info {
+            font-size: 16px;
+            color: #555555; /* Dark gray text */
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .error {
+            color: #FF0000; /* Red for errors */
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #A3BFFA; /* Green button matching homepage */
+            color: #FFFFFF; /* White text */
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #7D9ED8; /* Darker green on hover */
+        }
+        .language-selection {
+            margin-bottom: 30px;
+        }
+        .language-selection label {
+            font-size: 16px;
+            color: #555555; /* Dark gray text */
+            margin-right: 10px;
+        }
+        .language-selection select {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #B0C4DE; /* Teal border */
+            border-radius: 4px;
+            background-color: #FFFFFF;
+            color: #555555;
+            cursor: pointer;
+        }
+        .language-selection select:focus {
+            outline: none;
+            border-color: #A3BFFA; /* Green focus */
+            box-shadow: 0 0 5px rgba(163, 191, 250, 0.5);
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            .heading {
+                font-size: 24px;
+            }
+            .form-group label,
+            .form-group input,
+            .form-group textarea {
+                font-size: 14px;
+            }
+            .button {
+                display: block;
+                margin: 10px auto;
+                width: 200px;
+            }
+            .language-selection select {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -21,8 +139,8 @@
         {% endif %}
         
         <p><strong>Patient:</strong> {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</p>
-        <p><strong>Date:</strong> {{ appointment.appointment_date|date:"Y-m-d H:i" }}</p>
-        <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+        <p><strong>Date:</strong> {{ appointment.date_time|date:"Y-m-d H:i" }}</p>
+        <p><strong>Reason:</strong> {{ appointment.purpose }}</p>
         <p><strong>Status:</strong> {{ appointment.status|title }}</p>
         
         {% if appointment.status == 'pending' %}

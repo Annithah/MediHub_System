@@ -1,0 +1,100 @@
+<!-- templates/appointment_app/view_availabilities.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Availabilities</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5faff;
+            padding: 40px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            max-width: 900px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2a6ea9;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            padding: 12px 14px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #e6f0fa;
+        }
+        .status-booked {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        .status-available {
+            color: #5cb85c;
+            font-weight: bold;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #2a6ea9;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            border: none;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #1f5d91;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>My Availability Slots</h2>
+
+    {% if availabilities %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for slot in availabilities %}
+                    <tr>
+                        <td>{{ slot.start_time|date:"Y-m-d H:i" }}</td>
+                        <td>{{ slot.end_time|date:"Y-m-d H:i" }}</td>
+                        <td class="status-{{ slot.is_booked|yesno:'booked,available' }}">{{ slot.is_booked|yesno:'Booked,Available' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No availability slots added yet. <a href="{% url 'appointment_app:add_availability' %}">Add one now</a>.</p>
+    {% endif %}
+
+    <div class="button-group">
+        <a href="{% url 'appointment_app:add_availability' %}" class="button">Add Availability</a>
+        <a href="{% url 'appointment_app:dashboard' %}" class="button">Back to Dashboard</a>
+    </div>
+</div>
+</body>
+</html>

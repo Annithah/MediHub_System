@@ -34,10 +34,10 @@
                 </tr>
                 {% for appointment in appointments %}
                     <tr>
-                        <td>{{ appointment.appointment_date|date:"Y-m-d H:i" }}</td>
+                        <td>{{ appointment.date_time|date:"Y-m-d H:i" }}</td>
                         <td>
                             {% if request.user.role == 'patient' %}
-                                Dr. {{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}
+                                Dr. {{ appointment.doctor.user.first_name }} {{ appointment.doctor.user.last_name }}
                             {% else %}
                                 {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}
                             {% endif %}
@@ -62,3 +62,6 @@
     </div>
 </body>
 </html>
+
+
+

@@ -152,9 +152,9 @@
             <strong>Doctor:</strong> {{ selected_doctor.user.first_name }} {{ selected_doctor.user.last_name }} ({{ selected_doctor.specialty.name|default:"General Practitioner" }})
         </div>
 
-        <form method="POST" action="{% url 'appointment_app:book_appointment' selected_doctor.user.id %}">
+        <form method="POST" action="{% url 'appointment_app:book_appointment' selected_doctor.id %}">
             {% csrf_token %}
-            <input type="hidden" name="doctor" value="{{ selected_doctor.user.id }}">
+            <input type="hidden" name="doctor" value="{{ selected_doctor.id }}">
             <div class="form-group">
                 <label for="date_time">Date and Time</label>
                 <input type="datetime-local" name="date_time" id="date_time" required>
@@ -164,7 +164,7 @@
                 <textarea name="purpose" id="purpose" rows="4" placeholder="Describe the reason for your visit (e.g., 'General checkup')" required></textarea>
             </div>
             <div>
-                <button type="submit" class="button">Submit Appointment</button>
+                <button type="submit" class="button" name="submit">Submit Appointment</button>
                 <a href="{% url 'appointment_app:list_doctors' %}" class="button">Back to Doctors</a>
             </div>
         </form>
