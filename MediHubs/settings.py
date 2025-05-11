@@ -42,7 +42,7 @@ AUTH_USER_MODEL = 'auth_application.User'  # Corrected from 'auth.User'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'MediHubs/templates/auth_application')],
+        'DIRS': [],  # Leave it empty or use ['templates'] if you have global templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -53,6 +53,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'MediHubs.wsgi.application'
 
