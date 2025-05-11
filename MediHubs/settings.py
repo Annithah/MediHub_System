@@ -12,7 +12,8 @@ SECRET_KEY = 'django-insecure-6r#$&&3hc$q-g&_*0rn90&kl@^e9!9lhvcmf(re!+y#w9adldt
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+LOGIN_URL= '/login/'
+LOGOUT_URL= '/logout/'
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

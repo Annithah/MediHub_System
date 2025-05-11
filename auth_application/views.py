@@ -4,7 +4,7 @@ from django.contrib import messages
 from .forms import RegistrationForm, LoginForm
 
 def home_view(request):
-    return render(request, 'auth_application/index.html')
+    return render(request, 'home.html')
 
 def register(request):
     if request.method == 'POST':
@@ -23,7 +23,7 @@ def register(request):
             messages.error(request, 'Please correct the errors below.')
     else:
         form = RegistrationForm()
-    return render(request, 'auth_application/register.html', {'form': form})
+    return render(request, 'register.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
@@ -47,7 +47,7 @@ def login_view(request):
             messages.error(request, 'Please correct the errors below.')
     else:
         form = LoginForm()
-    return render(request, 'auth_application/login.html', {'form': form})
+    return render(request, 'login.html', {'form': form})
 
 def logout_view(request):
     logout(request)
