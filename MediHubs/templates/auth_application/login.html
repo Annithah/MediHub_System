@@ -1,78 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Patient Dashboard - MediHub</title>
+    <title>Login - MediHub</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            background-color: #E6F0FA; /* Light teal background */
-            background-image: url('https://example.com/keyboard-image.jpg'); /* Placeholder for background image */
+            background-color: #E6F0FA;
+            background-image: url('https://example.com/keyboard-image.jpg');
             background-size: cover;
             background-position: center;
-            background-opacity: 0.2; /* Faint background image */
+            background-opacity: 0.2;
         }
         .container {
-            max-width: 800px;
-            margin: 40px auto;
-            background-color: #FFFFFF; /* White background */
+            max-width: 400px;
+            margin: 100px auto;
+            background-color: #FFFFFF;
             padding: 30px;
             border-radius: 8px;
-            border: 1px solid #B0C4DE; /* Teal border */
+            border: 1px solid #B0C4DE;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
         .header {
-            text-align: center;
             margin-bottom: 20px;
         }
         .header h1 {
             font-size: 28px;
-            color: #008080; /* Teal heading */
+            color: #008080;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
-        .appointments-table {
-            width: 100%;
-            border-collapse: collapse;
+        .form-group {
             margin-bottom: 20px;
-        }
-        .appointments-table th, .appointments-table td {
-            padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #B0C4DE; /* Teal border */
         }
-        .appointments-table th {
-            background-color: #E6F0FA; /* Light teal header */
-            color: #555555; /* Dark gray text */
-            font-weight: bold;
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            color: #555555;
+            margin-bottom: 5px;
         }
-        .appointments-table td {
-            color: #555555; /* Dark gray text */
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #B0C4DE;
+            border-radius: 4px;
+            background-color: #FFFFFF;
+            color: #555555;
+            box-sizing: border-box;
         }
-        .status-approved {
-            color: #A3BFFA; /* Green for Approved */
-            font-weight: bold;
+        .form-group input:focus {
+            outline: none;
+            border-color: #A3BFFA;
+            box-shadow: 0 0 5px rgba(163, 191, 250, 0.5);
         }
-        .status-pending {
-            color: #FF0000; /* Red for Pending */
-            font-weight: bold;
+        .error {
+            color: #FF0000;
+            font-size: 14px;
+            margin-bottom: 10px;
         }
         .button {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #A3BFFA; /* Green button */
-            color: #FFFFFF; /* White text */
+            background-color: #A3BFFA;
+            color: #FFFFFF;
             text-decoration: none;
             border-radius: 5px;
             font-size: 16px;
-            margin: 0 10px;
+            border: none;
+            cursor: pointer;
             transition: background-color 0.3s;
         }
         .button:hover {
-            background-color: #7D9ED8; /* Darker green on hover */
-        }
-        .button-container {
-            text-align: center;
-            margin-top: 20px;
+            background-color: #7D9ED8;
         }
         @media (max-width: 600px) {
             .container {
@@ -82,14 +83,12 @@
             .header h1 {
                 font-size: 24px;
             }
-            .appointments-table th, .appointments-table td {
+            .form-group label,
+            .form-group input {
                 font-size: 14px;
-                padding: 8px;
             }
             .button {
-                display: block;
-                margin: 10px auto;
-                width: 200px;
+                width: 100%;
             }
         }
     </style>
@@ -97,40 +96,27 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Patient Dashboard</h1>
+            <h1>Login to MediHub</h1>
         </div>
 
-        {% if appointments %}
-            <table class="appointments-table">
-                <thead>
-                    <tr>
-                        <th>Doctor</th>
-                        <th>Date & Time</th>
-                        <th>Reason</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for appointment in appointments %}
-                        <tr>
-                            <td>{{ appointment.doctor }}</td>
-                            <td>{{ appointment.appointment_date }}</td>
-                            <td>{{ appointment.reason }}</td>
-                            <td class="{% if appointment.status == 'Approved' %}status-approved{% else %}status-pending{% endif %}">
-                                {{ appointment.status|default:"Pending" }}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p style="text-align: center; color: #555555;">You have no appointments yet.</p>
+        {% if messages %}
+            {% for message in messages %}
+                <p class="error">{{ message }}</p>
+            {% endfor %}
         {% endif %}
 
-        <div class="button-container">
-            <a href="{% url 'appointment_app:book_appointment' %}" class="button">Book New Appointment</a>
-            <a href="{% url 'auth_application:logout' %}" class="button">Logout</a>
-        </div>
+        <form method="POST" action="{% url 'auth_application:login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                <input type="email" name="email" id="id_email" required>
+            </div>
+            <div class="form-group">
+                <label for="id_password">Password</label>
+                <input type="password" name="password" id="id_password" required>
+            </div>
+            <button type="submit" class="button">Login</button>
+        </form>
     </div>
 </body>
 </html>

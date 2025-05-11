@@ -103,15 +103,14 @@
                 <option value="{% url 'auth_application:set_language' 'en' %}" {% if request.LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
                 <option value="{% url 'auth_application:set_language' 'es' %}" {% if request.LANGUAGE_CODE == 'es' %}selected{% endif %}>Spanish</option>
                 <option value="{% url 'auth_application:set_language' 'fr' %}" {% if request.LANGUAGE_CODE == 'fr' %}selected{% endif %}>French</option>
-                
             </select>
-        </div>  {% endcomment %}
+        </div> {% endcomment %}
 
         <p class="description">
             MediHub is your trusted platform for managing healthcare needs. Here’s how it works: after logging in, you can book appointments with your preferred doctor by selecting a date and time that suits you. Once your appointment is confirmed, you’ll receive a notification, and you can even opt for a telemedicine consultation if needed. We’re here to make your healthcare experience seamless and efficient.
         </p>
         <div>
-            <a href="{% url 'appointment_app:book_appointment' %}" class="button">Book Appointment</a>
+            <a href="{% url 'appointment_app:list_doctors' %}" class="button">Book Appointment</a>
             <a href="{% url 'auth_application:logout' %}" class="button">Logout</a>
         </div>
     </div>

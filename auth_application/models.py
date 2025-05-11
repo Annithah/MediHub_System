@@ -29,24 +29,24 @@ class User(AbstractBaseUser, PermissionsMixin):
             ('patient', 'Patient'),
             ('doctor', 'Doctor'),
             ('admin', 'Admin')
-        ]
+        ],
+        default='patient'
     )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # Explicitly define groups and user_permissions with unique related_name
     groups = models.ManyToManyField(
         'auth.Group',
-        related_name='auth_application_user_groups',  # Unique reverse accessor
+        related_name='auth_application_user_groups',
         blank=True,
         help_text='The groups this user belongs to.',
         verbose_name='groups',
     )
     user_permissions = models.ManyToManyField(
         'auth.Permission',
-        related_name='auth_application_user_permissions',  
+        related_name='auth_application_user_permissions',
         blank=True,
         help_text='Specific permissions for this user.',
         verbose_name='user permissions',
