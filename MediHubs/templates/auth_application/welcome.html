@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to MediHub</title>
+    <style>
+        body {
+            font-family: 'poppins', sans-serif;
+            margin: 0;
+            background-color: #E6F0FA; /* Light teal background from homepage */
+            background-image: url('https://example.com/keyboard-image.jpg'); /* Placeholder for background image */
+            background-size: cover;
+            background-position: center;
+            background-opacity: 0.2; /* Faint background image */
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #FFFFFF; /* White background */
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #B0C4DE; /* Teal border */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .welcome {
+            font-size: 28px;
+            font-weight: bold;
+            color: #008080; /* Teal heading */
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .description {
+            font-size: 16px;
+            color: #555555; /* Dark gray text */
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #A3BFFA; /* Green button matching homepage */
+            color: #FFFFFF; /* White text */
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #7D9ED8; /* Darker green on hover */
+        }
+        .language-selection {
+            margin-bottom: 30px;
+        }
+        .language-selection label {
+            font-size: 16px;
+            color: #555555; /* Dark gray text */
+            margin-right: 10px;
+        }
+        .language-selection select {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #B0C4DE; /* Teal border */
+            border-radius: 4px;
+            background-color: #FFFFFF;
+            color: #555555;
+            cursor: pointer;
+        }
+        .language-selection select:focus {
+            outline: none;
+            border-color: #A3BFFA; /* Green focus */
+            box-shadow: 0 0 5px rgba(163, 191, 250, 0.5);
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            .welcome {
+                font-size: 24px;
+            }
+            .description {
+                font-size: 14px;
+            }
+            .button {
+                display: block;
+                margin: 10px auto;
+                width: 200px;
+            }
+            .language-selection select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="welcome">Welcome {% if patient_name %}{{ patient_name }}{% else %}Patient{% endif %}!</h1>
+        
+        {% comment %} <div class="language-selection">
+            <label for="language">Choose Language:</label>
+            <select id="language" name="language" onchange="window.location.href=this.value;">
+                <option value="{% url 'auth_application:set_language' 'en' %}" {% if request.LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+                <option value="{% url 'auth_application:set_language' 'es' %}" {% if request.LANGUAGE_CODE == 'es' %}selected{% endif %}>Spanish</option>
+                <option value="{% url 'auth_application:set_language' 'fr' %}" {% if request.LANGUAGE_CODE == 'fr' %}selected{% endif %}>French</option>
+                
+            </select>
+        </div>  {% endcomment %}
+
+        <p class="description">
+            MediHub is your trusted platform for managing healthcare needs. Here’s how it works: after logging in, you can book appointments with your preferred doctor by selecting a date and time that suits you. Once your appointment is confirmed, you’ll receive a notification, and you can even opt for a telemedicine consultation if needed. We’re here to make your healthcare experience seamless and efficient.
+        </p>
+        <div>
+            <a href="{% url 'appointment_app:book_appointment' %}" class="button">Book Appointment</a>
+            <a href="{% url 'auth_application:logout' %}" class="button">Logout</a>
+        </div>
+    </div>
+</body>
+</html>

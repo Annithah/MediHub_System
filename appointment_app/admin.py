@@ -18,12 +18,12 @@ class DoctorAdmin(admin.ModelAdmin):
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('patient', 'doctor', 'appointment_date', 'status', 'created_at')
-    search_fields = ('patient__first_name', 'patient__last_name', 'doctor__first_name', 'doctor__last_name', 'reason')
-    list_filter = ('status', 'appointment_date', 'created_at')
-    date_hierarchy = 'appointment_date'
+    list_display = ('patient', 'doctor', 'date_time', 'status', 'created_at')  # Updated field name
+    search_fields = ('patient__first_name', 'patient__last_name', 'doctor__first_name', 'doctor__last_name', 'purpose')  # Updated field name
+    list_filter = ('status', 'date_time', 'created_at')  # Updated field name
+    date_hierarchy = 'date_time'
     raw_id_fields = ('patient', 'doctor')
-    ordering = ('-appointment_date',)
+    ordering = ('-date_time',)  
     list_editable = ('status',)
 
 @admin.register(Feedback)
