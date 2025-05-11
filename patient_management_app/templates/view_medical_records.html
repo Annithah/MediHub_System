@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medical Record - MediHub</title>
+    <style>
+        body {
+            font-family: 'poppins', sans-serif;
+            margin: 0;
+            background-color: #E6F0FA;
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #FFFFFF;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #B0C4DE;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .heading {
+            font-size: 28px;
+            font-weight: bold;
+            color: #008080;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .detail {
+            margin-bottom: 15px;
+        }
+        .detail label {
+            font-weight: bold;
+            color: #555555;
+        }
+        .detail p {
+            margin: 5px 0;
+            color: #555555;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #A3BFFA;
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #7D9ED8;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            .heading {
+                font-size: 24px;
+            }
+            .button {
+                display: block;
+                margin: 10px auto;
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="heading">Medical Record</h1>
+
+        <div class="detail">
+            <label>Date:</label>
+            <p>{{ record.date }}</p>
+        </div>
+        <div class="detail">
+            <label>Doctor:</label>
+            <p>{{ record.doctor.first_name }} {{ record.doctor.last_name }}</p>
+        </div>
+        <div class="detail">
+            <label>Diagnosis:</label>
+            <p>{{ record.diagnosis }}</p>
+        </div>
+        <div class="detail">
+            <label>Treatment:</label>
+            <p>{{ record.treatment }}</p>
+        </div>
+        <div class="detail">
+            <label>Notes:</label>
+            <p>{{ record.notes|default:"None" }}</p>
+        </div>
+
+        <div class="button-container">
+            <a href="{% url 'patient_management_app:patient_dashboard' %}" class="button">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>
