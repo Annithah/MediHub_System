@@ -7,7 +7,12 @@ class PatientProfile(models.Model):
     """
     Model to store additional patient profile information.
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patient_profile', limit_choices_to={'role': 'patient'})
+    user = models.OneToOneField(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='pm_patient_profile',
+        limit_choices_to={'role': 'patient'}
+    )
     date_of_birth = models.DateField(null=True, blank=True, help_text="Patient's date of birth.")
     address = models.TextField(blank=True, null=True, help_text="Patient's address.")
     phone_number = models.CharField(max_length=15, blank=True, null=True, help_text="Patient's phone number.")
@@ -26,8 +31,19 @@ class MedicalRecord(models.Model):
     """
     Model to store patient medical records.
     """
-    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='medical_records', limit_choices_to={'role': 'patient'})
-    doctor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='managed_records', limit_choices_to={'role': 'doctor'})
+    patient = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='pm_medical_records', 
+        limit_choices_to={'role': 'patient'}
+    )
+    doctor = models.ForeignKey(
+        User, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        related_name='pm_managed_records', 
+        limit_choices_to={'role': 'doctor'}
+    )
     date = models.DateField(auto_now_add=False, help_text="Date of the medical record.")
     diagnosis = models.TextField(help_text="Diagnosis details.")
     treatment = models.TextField(blank=True, null=True, help_text="Treatment details.")
@@ -45,10 +61,26 @@ class Billing(models.Model):
     """
     Model to store patient billing information.
     """
-    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='billings', limit_choices_to={'role': 'patient'})
-    appointment = models.ForeignKey(Appointment, on_delete=models.SET_NULL, null=True, blank=True, related_name='billings')
+    patient = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='pm_billings', 
+        limit_choices_to={'role': 'patient'}
+    )
+    appointment = models.ForeignKey(
+        Appointment, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        related_name='pm_billings'
+    )
     date = models.DateField(auto_now_add=False, help_text="Billing date.")
-    amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)], help_text="Billing amount.")
+    amount = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        validators=[MinValueValidator(0)], 
+        help_text="Billing amount."
+    )
     description = models.TextField(help_text="Billing description.")
     status = models.CharField(
         max_length=20,
@@ -76,8 +108,19 @@ class PatientNotification(models.Model):
     """
     Model to store notifications for patients.
     """
-    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications', limit_choices_to={'role': 'patient'})
-    appointment = models.ForeignKey(Appointment, on_delete=models.SET_NULL, null=True, blank=True, related_name='notifications')
+    patient = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='pm_notifications', 
+        limit_choices_to={'role': 'patient'}
+    )
+    appointment = models.ForeignKey(
+        Appointment, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        related_name='pm_notifications'
+    )
     message = models.TextField(help_text="Notification message.")
     type = models.CharField(
         max_length=20,

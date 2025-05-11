@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -119,6 +120,7 @@
     </style>
 </head>
 <body>
+    {%block doctor%}
     <div class="container">
         <h1 class="heading">Choose a Doctor</h1>
 
@@ -130,7 +132,6 @@
                 <option value="{% url 'auth_application:set_language' 'fr' %}" {% if request.LANGUAGE_CODE == 'fr' %}selected{% endif %}>French</option>
             </select>
         </div> {% endcomment %}
-
         {% if doctors %}
             <div class="doctor-list">
                 {% for doctor in doctors %}
@@ -142,13 +143,17 @@
                         {% endif %}
                         <div class="doctor-name">{{ doctor.user.first_name }} {{ doctor.user.last_name }}</div>
                         <div class="doctor-specialty">{{ doctor.specialty.name|default:"General Practitioner" }}</div>
-                        <a href="{% url 'appointment_app:book_appointment' doctor.user.id %}" class="button">Book Appointment</a>
+                        <a href="{% url 'appointment_app:book_appointment' doctor.id %}" class="button">Book Appointment</a>
                     </div>
                 {% endfor %}
             </div>
         {% else %}
             <p style="text-align: center; color: #555555;">No doctors available at the moment.</p>
         {% endif %}
+                <a href="{% url 'appointment_app:dashboard' %}" class="button">Back to Dashboard</a>
+
     </div>
+
+    {%endblock%}
 </body>
 </html>

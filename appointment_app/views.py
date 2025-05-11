@@ -3,9 +3,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from auth_application.models import User
-from .models import Doctor, Appointment
-from .forms import AppointmentForm
-from patient_management_app.models import Billing, PatientNotification, MedicalRecord
+from .models import Doctor, Appointment, Availability
+from .forms import *
 
 @login_required
 def dashboard(request):
@@ -25,8 +24,11 @@ def dashboard(request):
             'notifications': notifications,
         })
     elif request.user.role == 'doctor':
-        appointments = Appointment.objects.filter(doctor=request.user).order_by('-date_time')
-        return render(request, 'appointment_app/dashboard.html', {'appointments': appointments})
+        doctor = Doctor.objects.get(user=request.user)
+        appointments = Appointment.objects.filter(doctor=doctor).order_by('-date_time')
+        context['appointments'] = appointments
+    
+    return render(request, 'dashboard.html', context)
 
 @login_required
 def list_doctors(request):
@@ -35,7 +37,8 @@ def list_doctors(request):
         return redirect('patient_management_app:patient_dashboard')
     
     doctors = Doctor.objects.all()
-    return render(request, 'appointment_app/list_doctors.html', {'doctors': doctors})
+    print(doctors)
+    return render(request, 'list_doctors.html', {'doctors': doctors})
 
 @login_required
 def book_appointment(request, doctor_id):
@@ -44,7 +47,9 @@ def book_appointment(request, doctor_id):
         return redirect('patient_management_app:patient_dashboard')
     
     try:
-        selected_doctor = Doctor.objects.get(user__id=doctor_id)
+        selected_doctor = Doctor.objects.get(id=doctor_id)
+        print(selected_doctor)
+        print(doctor_id)
     except Doctor.DoesNotExist:
         messages.error(request, 'Doctor not found.')
         return redirect('appointment_app:list_doctors')
@@ -54,7 +59,17 @@ def book_appointment(request, doctor_id):
         if form.is_valid():
             appointment = form.save(commit=False)
             appointment.patient = request.user
-            appointment.doctor = selected_doctor.user
+            appointment.doctor = selected_doctor
+            # Check availability
+            availability = Availability.objects.filter(
+                doctor=appointment.doctor,
+                start_time__lte=appointment.date_time,
+                end_time__gte=appointment.date_time,
+                is_booked=False
+            ).first()
+            if not availability:
+                messages.error(request, 'Selected time slot is not available.')
+                return render(request, 'book_appointment.html', {'form': form, 'selected_doctor': selected_doctor})
             appointment.save()
             
             Billing.objects.create(
@@ -78,16 +93,16 @@ def book_appointment(request, doctor_id):
     else:
         initial_data = {'doctor': selected_doctor.user.id}
         form = AppointmentForm(initial=initial_data)
-        form.fields['doctor'].widget = form.fields['doctor'].hidden_widget()
-    return render(request, 'appointment_app/book_appointment.html', {'form': form, 'selected_doctor': selected_doctor})
+        form.fields['doctor'].widget = form.fields['doctor'].hidden_widget()  
+    return render(request, 'book_appointment.html', {'form': form, 'selected_doctor': selected_doctor})
 
 @login_required
 def approve_appointment(request, appointment_id):
     if request.user.role != 'doctor':
         messages.error(request, 'Only doctors can approve appointments.')
         return redirect('appointment_app:dashboard')
-    
-    appointment = get_object_or_404(Appointment, id=appointment_id, doctor=request.user)
+    doctor = Doctor.objects.get(user=request.user)
+    appointment = get_object_or_404(Appointment, id=appointment_id, doctor=doctor)
     if request.method == 'POST':
         if appointment.status == 'pending':
             appointment.status = 'confirmed'
@@ -113,7 +128,56 @@ def view_appointments(request):
     
     if request.user.role == 'patient':
         appointments = Appointment.objects.filter(patient=request.user).order_by('-date_time')
-    else:
-        appointments = Appointment.objects.filter(doctor=request.user).order_by('-date_time')
+    else:  # doctor
+        try:
+            doctor = Doctor.objects.get(user=request.user)
+            appointments = Appointment.objects.filter(doctor=doctor).order_by('-date_time')
+        except Doctor.DoesNotExist:
+            messages.error(request, 'Doctor profile not found.')
+            return redirect('auth_application:login')
     
-    return render(request, 'appointment_app/view_appointments.html', {'appointments': appointments})
+    return render(request, 'view_appointments.html', {'appointments': appointments})
+
+
+@login_required
+def add_availability(request):
+    if request.user.role != 'doctor':
+        messages.error(request, "Only doctors can add availability.")
+        return redirect('appointment_app:dashboard')
+
+    try:
+        doctor = Doctor.objects.get(user=request.user)
+    except Doctor.DoesNotExist:
+        messages.error(request, "Doctor profile not found.")
+        return redirect('appointment_app:dashboard')
+
+    if request.method == 'POST':
+        form = AvailabilityForm(request.POST)
+        if form.is_valid():
+            availability = form.save(commit=False)
+            availability.doctor = doctor
+            availability.save()
+            messages.success(request, "Availability added successfully.")
+            return redirect('appointment_app:view_availabilities')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = AvailabilityForm()
+
+    return render(request, 'add_availability.html', {'form': form})
+
+login_required
+def view_availabilities(request):
+    if request.user.role != 'doctor':
+        messages.error(request, "Access restricted to doctors only.")
+        return redirect('appointment_app:dashboard')
+
+    try:
+        doctor = Doctor.objects.get(user=request.user)
+    except Doctor.DoesNotExist:
+        messages.error(request, "Doctor profile not found.")
+        return redirect('appointment_app:dashboard')
+
+    availabilities = Availability.objects.filter(doctor=doctor).order_by('start_time')
+
+    return render(request, 'view_availabilities.html', {'availabilities': availabilities})
