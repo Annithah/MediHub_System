@@ -12,11 +12,17 @@ def dashboard(request):
         messages.error(request, 'Access denied: Invalid role.')
         return redirect('auth_application:login')
     
-    context = {'user_role': request.user.role}
-    
     if request.user.role == 'patient':
         appointments = Appointment.objects.filter(patient=request.user).order_by('-date_time')
-        context['appointments'] = appointments
+        records = MedicalRecord.objects.filter(patient=request.user).order_by('-date')
+        bills = Billing.objects.filter(patient=request.user).order_by('-date')
+        notifications = PatientNotification.objects.filter(patient=request.user).order_by('-sent_at')
+        return render(request, 'appointment_app/dashboard.html', {
+            'appointments': appointments,
+            'records': records,
+            'bills': bills,
+            'notifications': notifications,
+        })
     elif request.user.role == 'doctor':
         doctor = Doctor.objects.get(user=request.user)
         appointments = Appointment.objects.filter(doctor=doctor).order_by('-date_time')
@@ -28,7 +34,7 @@ def dashboard(request):
 def list_doctors(request):
     if request.user.role != 'patient':
         messages.error(request, 'Only patients can book appointments.')
-        return redirect('appointment_app:dashboard')
+        return redirect('patient_management_app:patient_dashboard')
     
     doctors = Doctor.objects.all()
     print(doctors)
@@ -38,7 +44,7 @@ def list_doctors(request):
 def book_appointment(request, doctor_id):
     if request.user.role != 'patient':
         messages.error(request, 'Only patients can book appointments.')
-        return redirect('appointment_app:dashboard')
+        return redirect('patient_management_app:patient_dashboard')
     
     try:
         selected_doctor = Doctor.objects.get(id=doctor_id)
@@ -65,14 +71,26 @@ def book_appointment(request, doctor_id):
                 messages.error(request, 'Selected time slot is not available.')
                 return render(request, 'book_appointment.html', {'form': form, 'selected_doctor': selected_doctor})
             appointment.save()
-            availability.is_booked = True
-            availability.save()
+            
+            Billing.objects.create(
+                patient=request.user,
+                appointment=appointment,
+                amount=100.00,
+                description=f"Consultation fee for appointment with Dr. {selected_doctor.user.first_name} on {appointment.date_time}",
+                status='Unpaid'
+            )
+            PatientNotification.objects.create(
+                patient=request.user,
+                appointment=appointment,
+                message=f"Your appointment with Dr. {selected_doctor.user.first_name} on {appointment.date_time} has been booked.",
+                type='confirmation'
+            )
+            
             messages.success(request, 'Appointment booked successfully!')
-            return redirect('appointment_app:dashboard')
+            return redirect('patient_management_app:patient_dashboard')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
-        
         initial_data = {'doctor': selected_doctor.user.id}
         form = AppointmentForm(initial=initial_data)
         form.fields['doctor'].widget = form.fields['doctor'].hidden_widget()  
@@ -89,12 +107,18 @@ def approve_appointment(request, appointment_id):
         if appointment.status == 'pending':
             appointment.status = 'confirmed'
             appointment.save()
+            PatientNotification.objects.create(
+                patient=appointment.patient,
+                appointment=appointment,
+                message=f"Your appointment with Dr. {appointment.doctor.first_name} on {appointment.date_time} has been confirmed.",
+                type='confirmation'
+            )
             messages.success(request, 'Appointment confirmed successfully!')
         else:
             messages.error(request, 'Appointment cannot be confirmed.')
         return redirect('appointment_app:dashboard')
     
-    return render(request, 'approve_appointment.html', {'appointment': appointment})
+    return render(request, 'appointment_app/approve_appointment.html', {'appointment': appointment})
 
 @login_required
 def view_appointments(request):

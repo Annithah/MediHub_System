@@ -3,11 +3,16 @@ from django.core.validators import MinValueValidator, MaxValueValidator, FileExt
 from auth_application.models import User
 
 class Specialty(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(blank=True, null=True)
+    """
+    Model to store medical specialties for doctors.
+    """
+    name = models.CharField(max_length=100, unique=True, help_text="The name of the medical specialty.")
+    description = models.TextField(blank=True, null=True, help_text="Optional description of the specialty.")
 
     class Meta:
         db_table = 'specialties'
+        verbose_name = 'Specialty'
+        verbose_name_plural = 'Specialties'
 
     def __str__(self):
         return self.name
@@ -40,6 +45,8 @@ class Doctor(models.Model):
 
     class Meta:
         db_table = 'doctors'
+        verbose_name = 'Doctor'
+        verbose_name_plural = 'Doctors'
 
     def __str__(self):
         return f"Dr. {self.user.first_name} {self.user.last_name}"
@@ -67,7 +74,8 @@ class Appointment(models.Model):
             ('completed', 'Completed'),
             ('cancelled', 'Cancelled'),
         ],
-        default='pending'
+        default='pending',
+        help_text="Current status of the appointment."
     )
     purpose = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -75,6 +83,8 @@ class Appointment(models.Model):
 
     class Meta:
         db_table = 'appointments'
+        verbose_name = 'Appointment'
+        verbose_name_plural = 'Appointments'
 
     def clean(self):
         if self.patient and self.patient.role != 'patient':
@@ -105,6 +115,8 @@ class Feedback(models.Model):
 
     class Meta:
         db_table = 'feedback'
+        verbose_name = 'Feedback'
+        verbose_name_plural = 'Feedbacks'
 
     def clean(self):
         if self.patient and self.patient.role != 'patient':
@@ -183,6 +195,8 @@ class PDFMessage(models.Model):
 
     class Meta:
         db_table = 'pdf_messages'
+        verbose_name = 'PDF Message'
+        verbose_name_plural = 'PDF Messages'
 
     def __str__(self):
         return f"PDF for Appointment #{self.appointment_id}"

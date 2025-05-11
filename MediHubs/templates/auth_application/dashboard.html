@@ -2,7 +2,103 @@
 <html>
 <head>
     <title>Patient Dashboard - MediHub</title>
+    <title>Patient Dashboard - MediHub</title>
     <style>
+        body {
+            font-family: 'poppins', sans-serif;
+            margin: 0;
+            background-color: #E6F0FA;
+            background-image: url('https://example.com/keyboard-image.jpg');
+            background-size: cover;
+            background-position: center;
+            background-opacity: 0.2;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #FFFFFF;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #B0C4DE;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 28px;
+            color: #008080;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            font-size: 20px;
+            color: #555555;
+            border-bottom: 2px solid #B0C4DE;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .appointments-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .appointments-table th, .appointments-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #B0C4DE;
+        }
+        .appointments-table th {
+            background-color: #E6F0FA;
+            color: #555555;
+            font-weight: bold;
+        }
+        .appointments-table td {
+            color: #555555;
+        }
+        .status-confirmed { color: #A3BFFA; font-weight: bold; }
+        .status-pending { color: #FF0000; font-weight: bold; }
+        .status-completed { color: #008080; font-weight: bold; }
+        .status-cancelled { color: #777777; font-weight: bold; }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #A3BFFA;
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #7D9ED8;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .appointments-table th, .appointments-table td {
+                font-size: 14px;
+                padding: 8px;
+            }
+            .button {
+                display: block;
+                margin: 10px auto;
+                width: 200px;
+            }
+        }
         body {
             font-family: 'poppins', sans-serif;
             margin: 0;
