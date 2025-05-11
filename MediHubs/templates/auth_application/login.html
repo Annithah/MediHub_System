@@ -1,16 +1,136 @@
-{% extends 'auth.html' %}
-{% comment %} This template extends the base auth.html template!!! {% endcomment %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Dashboard - MediHub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #E6F0FA; /* Light teal background */
+            background-image: url('https://example.com/keyboard-image.jpg'); /* Placeholder for background image */
+            background-size: cover;
+            background-position: center;
+            background-opacity: 0.2; /* Faint background image */
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #FFFFFF; /* White background */
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #B0C4DE; /* Teal border */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 28px;
+            color: #008080; /* Teal heading */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .appointments-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .appointments-table th, .appointments-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #B0C4DE; /* Teal border */
+        }
+        .appointments-table th {
+            background-color: #E6F0FA; /* Light teal header */
+            color: #555555; /* Dark gray text */
+            font-weight: bold;
+        }
+        .appointments-table td {
+            color: #555555; /* Dark gray text */
+        }
+        .status-approved {
+            color: #A3BFFA; /* Green for Approved */
+            font-weight: bold;
+        }
+        .status-pending {
+            color: #FF0000; /* Red for Pending */
+            font-weight: bold;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #A3BFFA; /* Green button */
+            color: #FFFFFF; /* White text */
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #7D9ED8; /* Darker green on hover */
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .appointments-table th, .appointments-table td {
+                font-size: 14px;
+                padding: 8px;
+            }
+            .button {
+                display: block;
+                margin: 10px auto;
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Patient Dashboard</h1>
+        </div>
 
-{% block title %}Login - MediHub{% endblock %}
-{% block content %}
-<div class="login-container">
-  <h2>MediHub Login</h2>
-  <form method="POST"action='{$ url 'login' $}' enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
-<p>Don't have an account? <a href="{% url 'auth_application:register' %}">Register</a></p>
-</div>
-{% endblock %}
+        {% if appointments %}
+            <table class="appointments-table">
+                <thead>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Date & Time</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                        <tr>
+                            <td>{{ appointment.doctor }}</td>
+                            <td>{{ appointment.appointment_date }}</td>
+                            <td>{{ appointment.reason }}</td>
+                            <td class="{% if appointment.status == 'Approved' %}status-approved{% else %}status-pending{% endif %}">
+                                {{ appointment.status|default:"Pending" }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="text-align: center; color: #555555;">You have no appointments yet.</p>
+        {% endif %}
 
+        <div class="button-container">
+            <a href="{% url 'appointment_app:book_appointment' %}" class="button">Book New Appointment</a>
+            <a href="{% url 'auth_application:logout' %}" class="button">Logout</a>
+        </div>
+    </div>
+</body>
+</html>
