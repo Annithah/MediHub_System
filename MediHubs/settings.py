@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'appointment_app',
     'auth_application',
     'patient_management_app',
+    'doctor_management_app'
 ]
 
 MIDDLEWARE = [
