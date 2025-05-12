@@ -2,8 +2,15 @@
 <html>
 
 <head>
-    <title>Patient Dashboard - MediHub</title>
-    <title>Patient Dashboard - MediHub</title>
+    <title>{% if user.role == 'doctor'  %}
+                                Doctor Dashboard - MediHub
+                            {% endif %}
+     </title>
+     <title>{% if user.role == 'patient' %}
+                               Patient Dashboard - MediHub
+                            {% endif %}
+     </title>
+         
     <style>
         body {
             font-family: 'poppins', sans-serif;
@@ -280,6 +287,9 @@
                 <thead>
                     <tr>
                         <th>Doctor</th>
+                        <th>{% if user.role == 'doctor'%}
+                            Patient
+                            {% endif %} </th>
                         <th>Date & Time</th>
                         <th>Purpose</th>
                         <th>Status</th>
@@ -291,6 +301,10 @@
                     {% for appointment in appointments %}
                     <tr>
                         <td>Dr.{{ appointment.doctor.user.first_name }} {{ appointment.doctor.user.last_name }}</td>
+                         <td>{% if user.role == 'doctor'  %}
+                         {{appointment.patient.first_name}} {{appointment.patient.last_name}}
+                         {% endif %}
+                        </td>
                         <td>{{ appointment.date_time }}</td>
                         <td>{{ appointment.purpose }}</td>
                         <td class="status-{{ appointment.status }}">{{ appointment.status|title|default:"Pending" }}

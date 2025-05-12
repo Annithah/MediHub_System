@@ -150,8 +150,11 @@ class Appointment(models.Model):
         super().clean()
 
     def __str__(self):
-        return f"Appointment with {self.doctor} on {self.date_time.strftime('%Y-%m-%d %H:%M')}"
-
+        
+        patient_name = f"{self.patient.first_name} {self.patient.last_name}"
+        doctor_name  = f"Dr. {self.doctor.user.first_name} {self.doctor.user.last_name}"
+        date_str     = self.date_time.strftime('%Y-%m-%d %H:%M')
+        return f"Appointment: {patient_name} ↔ {doctor_name} on {date_str}"
 
 class Feedback(models.Model):
     appointment = models.OneToOneField(

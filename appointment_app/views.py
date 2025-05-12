@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -6,6 +7,10 @@ from auth_application.models import User
 from .models import Doctor, Appointment, Availability, PDFMessage
 from .forms import AppointmentForm, AvailabilityForm, PDFMessageForm
 from patient_management_app.models import *
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.utils import timezone
+
 
 @login_required
 def dashboard(request):
@@ -185,32 +190,64 @@ def view_availabilities(request):
 
 @login_required
 def send_pdf_message(request, appointment_id):
+    # 1. Only doctors may access
     if request.user.role != 'doctor':
         messages.error(request, 'Only doctors can send PDF messages.')
         return redirect('appointment_app:dashboard')
 
+    # 2. Get the Doctor profile
     try:
         doctor = Doctor.objects.get(user=request.user)
     except Doctor.DoesNotExist:
         messages.error(request, "Doctor profile not found.")
         return redirect('appointment_app:dashboard')
 
+    # 3. Fetch a single Appointment belonging to this doctor (404 otherwise)
     appointment = get_object_or_404(Appointment, id=appointment_id, doctor=doctor)
 
     if request.method == 'POST':
         form = PDFMessageForm(request.POST, request.FILES)
         if form.is_valid():
-            pdf_message = form.save(commit=False)
-            pdf_message.appointment = appointment
+            # 4. Create or update the one PDFMessage for this appointment
+            pdf_message, created = PDFMessage.objects.get_or_create(appointment=appointment)
+            pdf_message.pdf_file = form.cleaned_data['pdf_file']
             pdf_message.save()
-            messages.success(request, "PDF message sent to the patient.")
+
+            # 5. Send email to the patient
+            #    (assuming patient is a User or has a related User)
+            patient_user = appointment.patient.user  
+            patient_email = patient_user.email
+
+            subject = 'Your Medical Report from MediHub'
+            message = (
+                f"Dear {patient_user.first_name},\n\n"
+                "Please find your medical report attached.\n\n"
+                f"Best regards,\nDr. {doctor.user.get_full_name()}"
+            )
+
+            uploaded_pdf = request.FILES['pdf_file']
+            email = EmailMessage(
+                subject=subject,
+                body=message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[patient_email]
+            )
+            email.attach(uploaded_pdf.name, uploaded_pdf.read(), uploaded_pdf.content_type)
+            email.send(fail_silently=False)
+
+            messages.success(request, "PDF message sent to the patient via email.")
             return redirect('appointment_app:dashboard')
         else:
             messages.error(request, "Please upload a valid PDF file.")
     else:
         form = PDFMessageForm()
 
+    # 6. Render the form & appointment details
     return render(request, 'pdf_report.html', {
         'form': form,
-        'appointment': appointment
+        'appointment': appointment,
+        'year': timezone.now().year,
+        # if you need diagnosis/prescription contexts, add them here:
+        # 'diagnosis': appointment.diagnosis,
+        # 'prescription': appointment.prescription,
     })
