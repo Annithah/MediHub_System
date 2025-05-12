@@ -14,7 +14,7 @@ def register(request):
             login(request, user)
             messages.success(request, 'Registration successful! Welcome!')
             if user.role == 'patient':
-                return redirect('patient_management_app:patient_dashboard')
+                return redirect('appointment_app:dashboard')
             elif user.role == 'doctor':
                 return redirect('appointment_app:dashboard')
             else:

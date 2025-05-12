@@ -21,10 +21,10 @@ class SpecialtyAdmin(admin.ModelAdmin):
 
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
-    list_display = ('user', 'specialty', 'license_number', 'experience_years', 'hospital_affiliation')
+    list_display = ('user', 'license_number', 'experience_years', 'hospital_affiliation')
     search_fields = ('user__first_name', 'user__last_name', 'license_number', 'hospital_affiliation')
-    list_filter = ('specialty', 'experience_years')
-    raw_id_fields = ('user', 'specialty')
+    list_filter = ('experience_years',)
+    raw_id_fields = ('user', )
     ordering = ('user__last_name',)
 
 

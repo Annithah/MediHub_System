@@ -28,11 +28,41 @@ class Patient(models.Model):
     allergies = models.TextField()
 
 class Doctor(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    specialization = models.CharField(max_length=100)
-    license_no = models.CharField(max_length=50)
-    department = models.CharField(max_length=100)
-    available_days = models.CharField(max_length=100)
+    SPECIALTY_CHOICES = [
+        ('general_surgery', 'General Surgery'),
+        ('pediatrics', 'Pediatrics'),  
+        ('cardiology', 'Cardiology'),
+        ('neurology', 'Neurology'),
+        ('orthopedics', 'Orthopedics'),
+        ('dermatology', 'Dermatology'),
+        ('psychiatry', 'Psychiatry'),
+        ('radiology', 'Radiology'),
+        ('anesthesiology', 'Anesthesiology'),
+        ('emergency_medicine', 'Emergency Medicine'),
+        ('internal_medicine', 'Internal Medicine'),
+        ('obstetrics_gynecology', 'Obstetrics and Gynecology'),
+        ('urology', 'Urology'),
+        ('gastroenterology', 'Gastroenterology'),
+        ('endocrinology', 'Endocrinology'),
+        ('pulmonology', 'Pulmonology'),
+        ('nephrology', 'Nephrology'),
+        ('rheumatology', 'Rheumatology'),
+        ('infectious_diseases', 'Infectious Diseases'),
+        ('ophthalmology', 'Ophthalmology'),
+        ('otolaryngology', 'Otolaryngology'),
+        ('plastic_surgery', 'Plastic Surgery'),
+        ('pathology', 'Pathology'),
+        ('family_medicine', 'Family Medicine'),
+        ('sports_medicine', 'Sports Medicine'),
+        ('geriatrics', 'Geriatrics'),
+        ('other', 'Other')
+    ]
+    specialty = models.CharField(max_length=100, choices=SPECIALTY_CHOICES)
+    # user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    # specialization = models.CharField(max_length=100)
+    # license_no = models.CharField(max_length=50)
+    # department = models.CharField(max_length=100)
+    # available_days = models.CharField(max_length=100)
 
 class Nurse(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)

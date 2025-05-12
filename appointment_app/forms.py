@@ -1,16 +1,15 @@
 from django import forms
-from .models import Appointment
+from .models import Appointment, Availability, PDFMessage
+
 
 class AppointmentForm(forms.ModelForm):
     class Meta:
         model = Appointment
-        fields = ['doctor', 'date_time', 'purpose']  # Updated to match new model fields
+        fields = ['doctor', 'date_time', 'purpose']
         widgets = {
             'date_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
 
-
-from .models import Availability
 
 class AvailabilityForm(forms.ModelForm):
     class Meta:
@@ -20,3 +19,9 @@ class AvailabilityForm(forms.ModelForm):
             'start_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'end_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
+
+
+class PDFMessageForm(forms.ModelForm):
+    class Meta:
+        model = PDFMessage
+        fields = '__all__'

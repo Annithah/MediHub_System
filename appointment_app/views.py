@@ -3,8 +3,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from auth_application.models import User
-from .models import Doctor, Appointment, Availability
-from .forms import *
+from .models import Doctor, Appointment, Availability, PDFMessage
+from .forms import AppointmentForm, AvailabilityForm, PDFMessageForm
 from patient_management_app.models import *
 
 @login_required
@@ -38,7 +38,6 @@ def list_doctors(request):
         return redirect('patient_management_app:patient_dashboard')
     
     doctors = Doctor.objects.all()
-    print(doctors)
     return render(request, 'list_doctors.html', {'doctors': doctors})
 
 @login_required
@@ -49,8 +48,6 @@ def book_appointment(request, doctor_id):
     
     try:
         selected_doctor = Doctor.objects.get(id=doctor_id)
-        print(selected_doctor)
-        print(doctor_id)
     except Doctor.DoesNotExist:
         messages.error(request, 'Doctor not found.')
         return redirect('appointment_app:list_doctors')
@@ -61,7 +58,7 @@ def book_appointment(request, doctor_id):
             appointment = form.save(commit=False)
             appointment.patient = request.user
             appointment.doctor = selected_doctor
-            # Check availability
+
             availability = Availability.objects.filter(
                 doctor=appointment.doctor,
                 start_time__lte=appointment.date_time,
@@ -79,8 +76,8 @@ def book_appointment(request, doctor_id):
                 amount=100.00,
                 description=f"Consultation fee for appointment with Dr. {selected_doctor.user.first_name} on {appointment.date_time}",
                 status='Unpaid'
-
             )
+
             PatientNotification.objects.create(
                 patient=request.user,
                 appointment=appointment,
@@ -103,8 +100,10 @@ def approve_appointment(request, appointment_id):
     if request.user.role != 'doctor':
         messages.error(request, 'Only doctors can approve appointments.')
         return redirect('appointment_app:dashboard')
+
     doctor = Doctor.objects.get(user=request.user)
     appointment = get_object_or_404(Appointment, id=appointment_id, doctor=doctor)
+
     if request.method == 'POST':
         if appointment.status == 'pending':
             appointment.status = 'confirmed'
@@ -130,7 +129,7 @@ def view_appointments(request):
     
     if request.user.role == 'patient':
         appointments = Appointment.objects.filter(patient=request.user).order_by('-date_time')
-    else:  # doctor
+    else:
         try:
             doctor = Doctor.objects.get(user=request.user)
             appointments = Appointment.objects.filter(doctor=doctor).order_by('-date_time')
@@ -139,7 +138,6 @@ def view_appointments(request):
             return redirect('auth_application:login')
     
     return render(request, 'view_appointments.html', {'appointments': appointments})
-
 
 @login_required
 def add_availability(request):
@@ -168,7 +166,7 @@ def add_availability(request):
 
     return render(request, 'add_availability.html', {'form': form})
 
-login_required
+@login_required
 def view_availabilities(request):
     if request.user.role != 'doctor':
         messages.error(request, "Access restricted to doctors only.")
@@ -181,5 +179,38 @@ def view_availabilities(request):
         return redirect('appointment_app:dashboard')
 
     availabilities = Availability.objects.filter(doctor=doctor).order_by('start_time')
-
     return render(request, 'view_availabilities.html', {'availabilities': availabilities})
+
+
+
+@login_required
+def send_pdf_message(request, appointment_id):
+    if request.user.role != 'doctor':
+        messages.error(request, 'Only doctors can send PDF messages.')
+        return redirect('appointment_app:dashboard')
+
+    try:
+        doctor = Doctor.objects.get(user=request.user)
+    except Doctor.DoesNotExist:
+        messages.error(request, "Doctor profile not found.")
+        return redirect('appointment_app:dashboard')
+
+    appointment = get_object_or_404(Appointment, id=appointment_id, doctor=doctor)
+
+    if request.method == 'POST':
+        form = PDFMessageForm(request.POST, request.FILES)
+        if form.is_valid():
+            pdf_message = form.save(commit=False)
+            pdf_message.appointment = appointment
+            pdf_message.save()
+            messages.success(request, "PDF message sent to the patient.")
+            return redirect('appointment_app:dashboard')
+        else:
+            messages.error(request, "Please upload a valid PDF file.")
+    else:
+        form = PDFMessageForm()
+
+    return render(request, 'pdf_report.html', {
+        'form': form,
+        'appointment': appointment
+    })
