@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views 
 
 app_name = 'appointment_app'
 
@@ -11,4 +11,7 @@ urlpatterns = [
     path('availability/add/', views.add_availability, name='add_availability'),
     path('availability/', views.view_availabilities, name='view_availabilities'),
     path('approve/<int:appointment_id>/', views.approve_appointment, name='approve_appointment'),
+    
+    path('send-pdf/<int:appointment_id>/', views.send_pdf_message, name='send_pdf_message'),
+
 ]

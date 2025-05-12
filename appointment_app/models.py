@@ -6,7 +6,36 @@ class Specialty(models.Model):
     """
     Model to store medical specialties for doctors.
     """
-    name = models.CharField(max_length=100, unique=True, help_text="The name of the medical specialty.")
+    SPECIALTY_CHOICES = [
+        ('general_surgery', 'General Surgery'),
+        ('pediatrics', 'Pediatrics'),  
+        ('cardiology', 'Cardiology'),
+        ('neurology', 'Neurology'),
+        ('orthopedics', 'Orthopedics'),
+        ('dermatology', 'Dermatology'),
+        ('psychiatry', 'Psychiatry'),
+        ('radiology', 'Radiology'),
+        ('anesthesiology', 'Anesthesiology'),
+        ('emergency_medicine', 'Emergency Medicine'),
+        ('internal_medicine', 'Internal Medicine'),
+        ('obstetrics_gynecology', 'Obstetrics and Gynecology'),
+        ('urology', 'Urology'),
+        ('gastroenterology', 'Gastroenterology'),
+        ('endocrinology', 'Endocrinology'),
+        ('pulmonology', 'Pulmonology'),
+        ('nephrology', 'Nephrology'),
+        ('rheumatology', 'Rheumatology'),
+        ('infectious_diseases', 'Infectious Diseases'),
+        ('ophthalmology', 'Ophthalmology'),
+        ('otolaryngology', 'Otolaryngology'),
+        ('plastic_surgery', 'Plastic Surgery'),
+        ('pathology', 'Pathology'),
+        ('family_medicine', 'Family Medicine'),
+        ('sports_medicine', 'Sports Medicine'),
+        ('geriatrics', 'Geriatrics'),
+        ('other', 'Other')
+    ]
+    name = models.CharField(max_length=100, unique=True, help_text="The name of the medical specialty.", choices=SPECIALTY_CHOICES)
     description = models.TextField(blank=True, null=True, help_text="Optional description of the specialty.")
 
     class Meta:
@@ -19,16 +48,45 @@ class Specialty(models.Model):
 
 
 class Doctor(models.Model):
+    SPECIALTY_CHOICES = [
+        ('general_surgery', 'General Surgery'),
+        ('pediatrics', 'Pediatrics'),  
+        ('cardiology', 'Cardiology'),
+        ('neurology', 'Neurology'),
+        ('orthopedics', 'Orthopedics'),
+        ('dermatology', 'Dermatology'),
+        ('psychiatry', 'Psychiatry'),
+        ('radiology', 'Radiology'),
+        ('anesthesiology', 'Anesthesiology'),
+        ('emergency_medicine', 'Emergency Medicine'),
+        ('internal_medicine', 'Internal Medicine'),
+        ('obstetrics_gynecology', 'Obstetrics and Gynecology'),
+        ('urology', 'Urology'),
+        ('gastroenterology', 'Gastroenterology'),
+        ('endocrinology', 'Endocrinology'),
+        ('pulmonology', 'Pulmonology'),
+        ('nephrology', 'Nephrology'),
+        ('rheumatology', 'Rheumatology'),
+        ('infectious_diseases', 'Infectious Diseases'),
+        ('ophthalmology', 'Ophthalmology'),
+        ('otolaryngology', 'Otolaryngology'),
+        ('plastic_surgery', 'Plastic Surgery'),
+        ('pathology', 'Pathology'),
+        ('family_medicine', 'Family Medicine'),
+        ('sports_medicine', 'Sports Medicine'),
+        ('geriatrics', 'Geriatrics'),
+        ('other', 'Other')
+    ]
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
         related_name='doctor_profile'
     )
-    specialty = models.ForeignKey(
-        Specialty,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
+    specialty = models.CharField(
+        max_length=100,
+        choices=SPECIALTY_CHOICES,
+        help_text="The medical specialty of the doctor.",
+        default='general_surgery'
     )
     license_number = models.CharField(max_length=50, unique=True)
     qualification = models.TextField(blank=True, null=True)
